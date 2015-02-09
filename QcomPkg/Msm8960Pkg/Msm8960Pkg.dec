@@ -1,0 +1,34 @@
+#/** @file
+#
+# Copyright (c) 2015, BinSys. All rights reserved.<BR>
+#
+#**/
+
+[Defines]
+  DEC_SPECIFICATION              = 0x00010005
+  PACKAGE_NAME                   = Msm8960Pkg
+  PACKAGE_GUID                   = 1d58acad-f14d-43fa-9fa2-73c16ba22e6e
+  PACKAGE_VERSION                = 0.1
+
+################################################################################
+#
+# Include Section - list of Include Paths that are provided by this package.
+#                   Comments are used for Keywords and Module Types.
+#
+# Supported Module Types:
+#  BASE SEC PEI_CORE PEIM DXE_CORE DXE_DRIVER DXE_RUNTIME_DRIVER DXE_SMM_DRIVER DXE_SAL_DRIVER UEFI_DRIVER UEFI_APPLICATION
+#
+################################################################################
+[Includes.common]
+  Include                        # Root include for the package
+
+
+[Guids.common]
+  gMsm8960BoardTokenSpaceGuid    =  { 0xf7916887, 0xfac9, 0x421b, { 0xb0, 0xc2, 0x85, 0x9b, 0x58, 0xfc, 0xeb, 0x89 } }
+  
+  
+[PcdsFixedAtBuild.common]
+  #gArmPlatformTokenSpaceGuid.PcdSystemMemoryUefiRegionSize |0x02F00000|UINT32|0x00000001
+  #gArmPlatformTokenSpaceGuid.PcdFirmwareVendor             |"Qualcomm Msm8960 by BinSys"|VOID*|0x00000002
+  #gArmPlatformTokenSpaceGuid.PcdSecGlobalVariableSize      |0x2000|UINT32|0x00000003
+  #gArmJunoTokenSpaceGuid.PcdSynopsysUsbOhciBaseAddress     |0x7FFB0000|UINT32|0x00000004
