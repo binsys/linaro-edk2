@@ -16,7 +16,7 @@
 [Defines]
   INF_VERSION                    = 0x00010005
   BASE_NAME                      = Msm8960Sec
-  FILE_GUID                      = d959e387-7b91-452c-90e0-a1dbac90ddb8
+  FILE_GUID                      = a2ed961c-e6ed-4fbd-af61-f8eed105bac7
   MODULE_TYPE                    = SEC
   VERSION_STRING                 = 1.0
 
@@ -33,11 +33,10 @@
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
-  EmbeddedPkg/EmbeddedPkg.dec
+  
   ArmPkg/ArmPkg.dec
-  
+  EmbeddedPkg/EmbeddedPkg.dec
   IntelFrameworkModulePkg/IntelFrameworkModulePkg.dec
-  
   QcomPkg/QcomPkg.dec
   QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
 
@@ -60,8 +59,8 @@
 
 [FixedPcd]
   
-  #gArmTokenSpaceGuid.PcdMemoryBase
-  #gArmTokenSpaceGuid.PcdMemorySize
+  gEmbeddedTokenSpaceGuid.PcdMemoryBase
+  gEmbeddedTokenSpaceGuid.PcdMemorySize
   
   gEmbeddedTokenSpaceGuid.PcdEmbeddedFdBaseAddress
   gEmbeddedTokenSpaceGuid.PcdEmbeddedFdSize

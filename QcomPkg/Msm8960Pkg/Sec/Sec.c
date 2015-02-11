@@ -81,11 +81,11 @@ CEntryPoint(
 	//SMEM Init
 	//the VALUE should come from SMEM,but we now set fixed value for dev ;)
 
-	//MemoryBase = (VOID*)FixedPcdGet32(PcdSystemMemoryBase); //0x80000000
-	//MemorySize = FixedPcdGet32(PcdSystemMemorySize);        //0x40000000
+	MemoryBase = (VOID*)FixedPcdGet32(PcdMemoryBase); //0x80000000
+	MemorySize = FixedPcdGet32(PcdMemorySize);        //0x40000000
 
-	MemoryBase = (VOID*)0x80000000; //0x80000000
-	MemorySize = 0x40000000;        //0x40000000
+	//MemoryBase = (VOID*)0x80000000; //0x80000000
+	//MemorySize = 0x40000000;        //0x40000000
 	
 	//FBPT need PMU,before BuildFBPT,we need config PMU.
 	//BuildFBPT(MemoryBase);

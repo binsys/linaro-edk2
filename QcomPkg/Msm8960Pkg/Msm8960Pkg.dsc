@@ -235,7 +235,7 @@
 
   gEfiMdePkgTokenSpaceGuid.PcdReportStatusCodePropertyMask     |0x07
   
-  #gArmPlatformTokenSpaceGuid.PcdFirmwareVendor                |"Qualcomm Msm8960 by BinSys"
+  
   #gArmPlatformTokenSpaceGuid.PcdSecGlobalVariableSize         |0x00002000
   #gArmPlatformTokenSpaceGuid.PcdSystemMemoryUefiRegionSize    |0x02F00000
 
@@ -263,7 +263,8 @@
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiLoaderCode           |10
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiLoaderData           |0
   
-
+  gEmbeddedTokenSpaceGuid.PcdMemoryBase                             |0x80000000
+  gEmbeddedTokenSpaceGuid.PcdMemorySize                             |0x40000000
   
   gArmTokenSpaceGuid.PcdCpuVectorBaseAddress                   |0x81500000
   gArmTokenSpaceGuid.PcdCpuResetAddress                        |0x81500000
@@ -280,15 +281,12 @@
   gEmbeddedTokenSpaceGuid.PcdFlashFvMainBase                   |0x80300000
   gEmbeddedTokenSpaceGuid.PcdFlashFvMainSize                   |0x00200000
 
-  #gEmbeddedTokenSpaceGuid.PcdSystemMemoryBase                 |0x80000000
-  #gEmbeddedTokenSpaceGuid.PcdSystemMemorySize                 |0x40000000
-
-  gArmTokenSpaceGuid.PcdSystemMemoryBase                       |0x80000000
-  gArmTokenSpaceGuid.PcdSystemMemorySize                       |0x40000000
-
-  gArmTokenSpaceGuid.PcdVFPEnabled                             |0x01
+  #gArmPlatformTokenSpaceGuid.PcdFirmwareVendor                |"Qualcomm Msm8960 by BinSys"
   
+  gArmTokenSpaceGuid.PcdVFPEnabled                             |0x01
 
+
+  
 ################################################################################
 #
 # Components Section - list of all EDK II Modules needed by this Platform
@@ -317,19 +315,19 @@
   
   #Load order
   #EFI_CORE_PROTOCOL_NOTIFY_ENTRY  mArchProtocols[] = {
-  #{ &gEfiSecurityArchProtocolGuid,         (VOID **)&gSecurity,      NULL, NULL, FALSE },
-  #{ &gEfiCpuArchProtocolGuid,              (VOID **)&gCpu,           NULL, NULL, FALSE },
-  #{ &gEfiMetronomeArchProtocolGuid,        (VOID **)&gMetronome,     NULL, NULL, FALSE },
+    #{ &gEfiSecurityArchProtocolGuid,         (VOID **)&gSecurity,      NULL, NULL, FALSE },
+    #{ &gEfiCpuArchProtocolGuid,              (VOID **)&gCpu,           NULL, NULL, FALSE },
+    #{ &gEfiMetronomeArchProtocolGuid,        (VOID **)&gMetronome,     NULL, NULL, FALSE },
   #{ &gEfiTimerArchProtocolGuid,            (VOID **)&gTimer,         NULL, NULL, FALSE },
   #{ &gEfiBdsArchProtocolGuid,              (VOID **)&gBds,           NULL, NULL, FALSE },
   #{ &gEfiWatchdogTimerArchProtocolGuid,    (VOID **)&gWatchdogTimer, NULL, NULL, FALSE },
-  #{ &gEfiRuntimeArchProtocolGuid,          (VOID **)&gRuntime,       NULL, NULL, FALSE },
-  #{ &gEfiVariableArchProtocolGuid,         (VOID **)NULL,            NULL, NULL, FALSE },
-  #{ &gEfiVariableWriteArchProtocolGuid,    (VOID **)NULL,            NULL, NULL, FALSE },
-  #{ &gEfiCapsuleArchProtocolGuid,          (VOID **)NULL,            NULL, NULL, FALSE },
-  #{ &gEfiMonotonicCounterArchProtocolGuid, (VOID **)NULL,            NULL, NULL, FALSE },
-  #{ &gEfiResetArchProtocolGuid,            (VOID **)NULL,            NULL, NULL, FALSE },
-  #{ &gEfiRealTimeClockArchProtocolGuid,    (VOID **)NULL,            NULL, NULL, FALSE },
+    #{ &gEfiRuntimeArchProtocolGuid,          (VOID **)&gRuntime,       NULL, NULL, FALSE },
+    #{ &gEfiVariableArchProtocolGuid,         (VOID **)NULL,            NULL, NULL, FALSE },
+    #{ &gEfiVariableWriteArchProtocolGuid,    (VOID **)NULL,            NULL, NULL, FALSE },
+    #{ &gEfiCapsuleArchProtocolGuid,          (VOID **)NULL,            NULL, NULL, FALSE },
+    #{ &gEfiMonotonicCounterArchProtocolGuid, (VOID **)NULL,            NULL, NULL, FALSE },
+    #{ &gEfiResetArchProtocolGuid,            (VOID **)NULL,            NULL, NULL, FALSE },
+    #{ &gEfiRealTimeClockArchProtocolGuid,    (VOID **)NULL,            NULL, NULL, FALSE },
   #{ NULL,                                  (VOID **)NULL,            NULL, NULL, FALSE }
   #};
   
@@ -337,19 +335,19 @@
   
   
   #GLOBAL_REMOVE_IF_UNREFERENCED CONST GUID_TO_STRING_PROTOCOL_ENTRY mMissingProtocols[] = {
-  #{ &gEfiSecurityArchProtocolGuid,         "Security"           },
-  #{ &gEfiCpuArchProtocolGuid,              "CPU"                },
-  #{ &gEfiMetronomeArchProtocolGuid,        "Metronome"          },
+    #{ &gEfiSecurityArchProtocolGuid,         "Security"           },
+    #{ &gEfiCpuArchProtocolGuid,              "CPU"                },
+    #{ &gEfiMetronomeArchProtocolGuid,        "Metronome"          },
   #{ &gEfiTimerArchProtocolGuid,            "Timer"              },
   #{ &gEfiBdsArchProtocolGuid,              "Bds"                },
   #{ &gEfiWatchdogTimerArchProtocolGuid,    "Watchdog Timer"     },
-  #{ &gEfiRuntimeArchProtocolGuid,          "Runtime"            },
-  #{ &gEfiVariableArchProtocolGuid,         "Variable"           },
-  #{ &gEfiVariableWriteArchProtocolGuid,    "Variable Write"     },
-  #{ &gEfiCapsuleArchProtocolGuid,          "Capsule"            },
-  #{ &gEfiMonotonicCounterArchProtocolGuid, "Monotonic Counter"  },
-  #{ &gEfiResetArchProtocolGuid,            "Reset"              },
-  #{ &gEfiRealTimeClockArchProtocolGuid,    "Real Time Clock"    },
+    #{ &gEfiRuntimeArchProtocolGuid,          "Runtime"            },
+    #{ &gEfiVariableArchProtocolGuid,         "Variable"           },
+    #{ &gEfiVariableWriteArchProtocolGuid,    "Variable Write"     },
+    #{ &gEfiCapsuleArchProtocolGuid,          "Capsule"            },
+    #{ &gEfiMonotonicCounterArchProtocolGuid, "Monotonic Counter"  },
+    #{ &gEfiResetArchProtocolGuid,            "Reset"              },
+    #{ &gEfiRealTimeClockArchProtocolGuid,    "Real Time Clock"    },
   #{ NULL,                                  ""                   }
   #};
   
@@ -362,13 +360,14 @@
   
   EmbeddedPkg/MetronomeDxe/MetronomeDxe.inf
   
-  #ArmPkg/Drivers/ArmGic/ArmGicDxe.inf{
-  #  <LibraryClasses>
-  #    ArmGicLib|ArmPkg/Drivers/ArmGic/ArmGicLib.inf
-  #}
+  ArmPkg/Drivers/ArmGic/ArmGicDxe.inf{
+    <LibraryClasses>
+      ArmGicLib|ArmPkg/Drivers/ArmGic/ArmGicLib.inf
+  }
   
   #QcomPkg/Msm8960Pkg/TimerDxe/TimerDxe.inf
  
+  QcomPkg/Msm8960Pkg/Bds/Bds.inf
   #ArmPlatformPkg/Bds/Bds.inf
  
   #MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
@@ -376,13 +375,10 @@
 
   MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
   
-  #Variable
-  #Variable Write
-  #MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
+  MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
   
   
-  #MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
-  #     dept gEfiVariableWriteArchProtocolGuid
+  MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
 
   EmbeddedPkg/EmbeddedMonotonicCounter/EmbeddedMonotonicCounter.inf
   EmbeddedPkg/ResetRuntimeDxe/ResetRuntimeDxe.inf

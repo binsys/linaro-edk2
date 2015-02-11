@@ -36,7 +36,7 @@
 #include <Library/IoLib.h>
 #include <Library/DebugLib.h>
 
-#include <qcom_lk.h>
+#include <Library/qcom_lk.h>
 
 #include <qcom_msm8960_iomap.h>
 #include <qcom_msm8960_irqs.h>

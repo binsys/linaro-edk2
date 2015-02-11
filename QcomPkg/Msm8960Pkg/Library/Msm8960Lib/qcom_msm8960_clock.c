@@ -16,16 +16,16 @@
 #include <Library/DebugLib.h>
 #include <Library/ArmLib.h>
 
-#include <qcom_lk.h>
+#include <Library/qcom_lk.h>
 
 #include <qcom_msm8960_iomap.h>
 #include <qcom_msm8960_irqs.h>
 #include <qcom_msm8960_clock.h>
 
 
-#include <qcom_clock.h>
-#include <qcom_clock_pll.h>
-#include <qcom_clock_local.h>
+#include <Library/qcom_clock.h>
+#include <Library/qcom_clock_pll.h>
+#include <Library/qcom_clock_local.h>
 
 
 

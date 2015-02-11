@@ -32,10 +32,10 @@
 #include <Library/IoLib.h>
 #include <Library/DebugLib.h>
 
-#include <qcom_lk.h>
-#include <qcom_clock.h>
-#include <qcom_clock_pll.h>
-#include <qcom_clock_local.h>
+#include <Library/qcom_lk.h>
+#include <Library/qcom_clock.h>
+#include <Library/qcom_clock_pll.h>
+#include <Library/qcom_clock_local.h>
 
 
 

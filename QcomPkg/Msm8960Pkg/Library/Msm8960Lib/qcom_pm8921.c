@@ -32,12 +32,12 @@
 #include <Library/DebugLib.h>
 #include <Library/ArmLib.h>
 
-#include <qcom_lk.h>
+#include <Library/qcom_lk.h>
 
 #include <qcom_msm8960_iomap.h>
 #include <qcom_msm8960_gpio.h>
 
-#include <qcom_gsbi.h>
+#include <Library/qcom_gsbi.h>
 
 #include <pm8921.h>
 

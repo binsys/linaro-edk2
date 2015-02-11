@@ -45,8 +45,8 @@
 #include <Library/PcdLib.h>
 #include <Library/IoLib.h>
 
-#include <qcom_lk.h>
-#include <qcom_gsbi.h>
+#include <Library/qcom_lk.h>
+#include <Library/qcom_gsbi.h>
 #include <qcom_uart_dm.h>
 
 
