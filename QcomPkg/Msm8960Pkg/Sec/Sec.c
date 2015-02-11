@@ -30,27 +30,15 @@
 #include "LzmaDecompress.h"
 
 
-extern VOID TimerInit(VOID);
 extern void msm_clocks_init(VOID);
-extern RETURN_STATUS EFIAPI SerialPortInitialize(VOID);
+extern void uart_dm_init(UINT8 id,UINT32 gsbi_base,UINT32 uart_dm_base);
+
 
 VOID PadConfiguration(VOID);
 VOID InitCache(IN  UINT32  MemoryBase, IN  UINT32  MemoryLength);
 
 EFI_STATUS EFIAPI ExtractGuidedSectionLibConstructor(VOID);
 EFI_STATUS EFIAPI LzmaDecompressLibConstructor(VOID);
-
-
-VOID ClockInit(VOID)
-{
-	msm_clocks_init();
-}
-
-//VOID TimerInit(VOID)
-//{
-//
-//}
-
 
 VOID
 CEntryPoint(
@@ -70,22 +58,19 @@ CEntryPoint(
 	PadConfiguration();
 
 	// Set up system clocking,now only uart.
-	ClockInit();
+	msm_clocks_init();
 
 	// 
 	// Init Uart
-	SerialPortInitialize();
+	uart_dm_init(FixedPcdGet8(PcdQcomDebugGsbiID), FixedPcdGet32(PcdQcomDebugGsbiBaseAddress), FixedPcdGet32(PcdQcomDebugUartDmBaseAddress));
 
 	DEBUG((EFI_D_ERROR, "UEFI:Sec:CEntryPoint Uart Enabled\n"));
 
 	//SMEM Init
-	//the VALUE should come from SMEM,but we now set fixed value for dev ;)
+	//the VALUE should come from SMEM,but we now set fixed value for dev 
 
 	MemoryBase = (VOID*)FixedPcdGet32(PcdMemoryBase); //0x80000000
 	MemorySize = FixedPcdGet32(PcdMemorySize);        //0x40000000
-
-	//MemoryBase = (VOID*)0x80000000; //0x80000000
-	//MemorySize = 0x40000000;        //0x40000000
 	
 	//FBPT need PMU,before BuildFBPT,we need config PMU.
 	//BuildFBPT(MemoryBase);
@@ -114,9 +99,6 @@ CEntryPoint(
 
 	//MemorySize
 	CreateHobList(HobBase, 0x02F00000, HobBase, (VOID *)((UINT32)HobBase + 0x02F00000 - StackSize));
-
-	DEBUG((EFI_D_ERROR, "UEFI:Sec:CEntryPoint:CreateHobList ok!\n"));
-
 
 
 #define attr0x3c07  EFI_RESOURCE_ATTRIBUTE_PRESENT |\

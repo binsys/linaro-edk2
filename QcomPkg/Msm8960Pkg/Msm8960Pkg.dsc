@@ -67,7 +67,7 @@
   
   LzmaDecompressLib                |    IntelFrameworkModulePkg/Library/LzmaCustomDecompressLib/LzmaCustomDecompressLib.inf
   
-  SerialPortLib                    |    QcomPkg/Msm8960Pkg/Library/SerialPortLib/SerialPortLib.inf
+  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
   TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
   MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
   MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
@@ -92,7 +92,7 @@
 
   MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
   MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
-  SerialPortLib                    |    QcomPkg/Msm8960Pkg/Library/SerialPortLib/SerialPortLib.inf
+  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
   TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
 
 [LibraryClasses.common.DXE_DRIVER]
@@ -122,7 +122,7 @@
   
   MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
   MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
-  SerialPortLib                    |    QcomPkg/Msm8960Pkg/Library/SerialPortLib/SerialPortLib.inf
+  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
   TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
   
 
@@ -137,7 +137,7 @@
   
   MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
   MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
-  SerialPortLib                    |    QcomPkg/Msm8960Pkg/Library/SerialPortLib/SerialPortLib.inf
+  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
   TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
 
   EfiResetSystemLib                |    QcomPkg/Msm8960Pkg/Library/ResetSystemLib/ResetSystemLib.inf
@@ -159,7 +159,7 @@
   
   MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
   MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
-  SerialPortLib                    |    QcomPkg/Msm8960Pkg/Library/SerialPortLib/SerialPortLib.inf
+  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
   TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
   
 [LibraryClasses.ARM]
@@ -284,6 +284,12 @@
   #gArmPlatformTokenSpaceGuid.PcdFirmwareVendor                |"Qualcomm Msm8960 by BinSys"
   
   gArmTokenSpaceGuid.PcdVFPEnabled                             |0x01
+  
+  # about 10ms
+  gEmbeddedTokenSpaceGuid.PcdTimerPeriod                       |100000
+  
+  #1 ticks about 148ns
+  gEmbeddedTokenSpaceGuid.PcdEmbeddedPerformanceCounterPeriodInNanoseconds  |148
 
 
   
@@ -365,12 +371,12 @@
       ArmGicLib|ArmPkg/Drivers/ArmGic/ArmGicLib.inf
   }
   
-  #QcomPkg/Msm8960Pkg/TimerDxe/TimerDxe.inf
+  QcomPkg/Msm8960Pkg/TimerDxe/TimerDxe.inf
  
   QcomPkg/Msm8960Pkg/Bds/Bds.inf
   #ArmPlatformPkg/Bds/Bds.inf
- 
-  #MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
+  
+  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
   #     dept gEfiTimerArchProtocolGuid
 
   MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf

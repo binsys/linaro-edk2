@@ -30,7 +30,6 @@
   qcom_clock.c
   qcom_clock_local.c
   qcom_clock_pll.c
-  qcom_uart_dm.c
 
 [LibraryClasses]
   DebugLib

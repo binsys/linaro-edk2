@@ -28,17 +28,30 @@
 
 [Sources.common]
   SerialPortLib.c
+  qcom_uart_dm.c
+  qcom_uart_dm_init.c
+  qcom_uart_dm_write.c
+  qcom_uart_dm_read.c
 
 [LibraryClasses]
   DebugLib
   IoLib
   MsmSharedLib
+  MsmTargetLib
+  TimerLib
+  ArmLib
 
 [Packages]
   EmbeddedPkg/EmbeddedPkg.dec
   MdePkg/MdePkg.dec
+  
+  EmbeddedPkg/EmbeddedPkg.dec
+  ArmPkg/ArmPkg.dec
   QcomPkg/QcomPkg.dec
 
 [FixedPcd]
-  #gOmap35xxTokenSpaceGuid.PcdOmap35xxConsoleUart
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugGsbiID
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugGsbiBaseAddress
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugUartDmBaseAddress
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugRartDmClockRxTxBitRate
 

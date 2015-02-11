@@ -29,6 +29,8 @@
   MdePkg/MdePkg.dec
   EmbeddedPkg/EmbeddedPkg.dec
   ArmPkg/ArmPkg.dec
+  QcomPkg/QcomPkg.dec
+  QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
 
 [LibraryClasses]
   BaseLib

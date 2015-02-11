@@ -22,9 +22,6 @@
 
 extern int uart_putc(int port, char c);
 extern int uart_getc(int port, int wait);
-extern void uart_dm_init(UINT8 id,UINT32 gsbi_base,UINT32 uart_dm_base);
-
-static UINT32 S_INIT = 0;
 
 /*
   Programmed hardware of Serial port.
@@ -36,14 +33,7 @@ SerialPortInitialize (
   VOID
   )
 {
-	if(!S_INIT)
-	{
-		//!IMPORTANT  MUST INIT(RE-INIT) UART AT HERE.BECAUSE QCOM UART_DM lib is static link,can't share var*.
-		DEBUG ((EFI_D_ERROR, "SerialPortInitialize:(REMOVE THIS ON PRODUCT BUILD)!!!\n"));
-		
-		uart_dm_init(5, 0x16400000, 0x16440000);
-		S_INIT = 1;
-	}
+	
 	return RETURN_SUCCESS;
 }
 

@@ -23,12 +23,18 @@
 #include <Library/UefiLib.h>
 #include <Library/PcdLib.h>
 #include <Library/IoLib.h>
-#include <Library/OmapLib.h>
 
 #include <Protocol/Timer.h>
 #include <Protocol/HardwareInterrupt.h>
 
+#include <qcom_msm8960_iomap.h>
+#include <qcom_msm8960_irqs.h>
 
+
+#define DGT_ENABLE_CLR_ON_MATCH_EN        2
+#define DGT_ENABLE_EN                     1
+
+#define SPSS_TIMER_STATUS_DGT_EN    (1 << 0)
 
 // The notification function to call on every timer interrupt.
 volatile EFI_TIMER_NOTIFY      mTimerNotifyFunction   = (EFI_TIMER_NOTIFY)NULL;
@@ -50,6 +56,10 @@ volatile UINT32 TIER;
 // Cached interrupt vector
 volatile UINTN  gVector;
 
+static void wait_for_timer_op(void)
+{
+	while (MmioRead32(SPSS_TIMER_STATUS) & SPSS_TIMER_STATUS_DGT_EN);
+}
 
 /**
 
@@ -87,10 +97,10 @@ TimerInterruptHandler (
   }
   
   // Clear all timer interrupts
-  MmioWrite32 (TISR, TISR_CLEAR_ALL);
+  //MmioWrite32 (TISR, TISR_CLEAR_ALL);
 
   // Poll interrupt status bits to ensure clearing
-  while ((MmioRead32 (TISR) & TISR_ALL_INTERRUPT_MASK) != TISR_NO_INTERRUPTS_PENDING);
+  //while ((MmioRead32 (TISR) & TISR_ALL_INTERRUPT_MASK) != TISR_NO_INTERRUPTS_PENDING);
 
   gBS->RestoreTPL (OriginalTPL);
 }
@@ -180,27 +190,40 @@ TimerDriverSetTimerPeriod (
 {
   EFI_STATUS  Status;
   UINT64      TimerCount;
-  INT32       LoadValue;
 
-  if (TimerPeriod == 0) {
-    // Turn off GPTIMER3
-    MmioWrite32 (TCLR, TCLR_ST_OFF);
+  if (TimerPeriod == 0) 
+  {
+    // Disable DGT
+    MmioWrite32 (DGT_ENABLE, 0);
+    wait_for_timer_op();
 
     Status = gInterrupt->DisableInterruptSource(gInterrupt, gVector);
-  } else {
+  } 
+  else 
+  {
+    //ticks_per_sec = 6750000;	/* (27 MHz / 4) 
+    //ticks_per_sec = 6750000;	/* (27 MHz / 4)
+    //1s = 6750000 ticks
+    //1ms = 6750 ticks
+    //1us=6.75 ticks
+    //1ns = 0.00675 ticks
+    //100000ns = 675
+    //4000 ns = 27 ticks
+    //148.148ns = 1 ticks
+    //PcdEmbeddedPerformanceCounterPeriodInNanoseconds = 148
+    
+    //            1 ticks     ? ticks
+    //            ©¤©¤©¤©¤©¤©¤©¤©¤ = ©¤©¤©¤©¤©¤©¤©¤©¤
+    //            148ns       x*100ns
+    // ? ticks = x*100ns * 1 ticks / 148ns
+    
+  
     // Calculate required timer count
     TimerCount = DivU64x32(TimerPeriod * 100, PcdGet32(PcdEmbeddedPerformanceCounterPeriodInNanoseconds));
 
-    // Set GPTIMER3 Load register
-    LoadValue = (INT32) -TimerCount;
-    MmioWrite32 (TLDR, LoadValue);
-    MmioWrite32 (TCRR, LoadValue);
-
-    // Enable Overflow interrupt
-    MmioWrite32 (TIER, TIER_TCAR_IT_DISABLE | TIER_OVF_IT_ENABLE | TIER_MAT_IT_DISABLE);
-
-    // Turn on GPTIMER3, it will reload at overflow
-    MmioWrite32 (TCLR, TCLR_AR_AUTORELOAD | TCLR_ST_ON);
+    MmioWrite32(DGT_MATCH_VAL,(UINT32)TimerCount );
+    MmioWrite32(DGT_CLEAR,0);
+    MmioWrite32(DGT_ENABLE,DGT_ENABLE_EN | DGT_ENABLE_CLR_ON_MATCH_EN );
 
     Status = gInterrupt->EnableInterruptSource(gInterrupt, gVector);
   }
@@ -332,31 +355,36 @@ TimerInitialize (
 {
   EFI_HANDLE  Handle = NULL;
   EFI_STATUS  Status;
-  UINT32      TimerBaseAddress;
+  //UINT32      TimerBaseAddress;
 
   // Find the interrupt controller protocol.  ASSERT if not found.
   Status = gBS->LocateProtocol (&gHardwareInterruptProtocolGuid, NULL, (VOID **)&gInterrupt);
   ASSERT_EFI_ERROR (Status);
 
-  // Set up the timer registers
-  TimerBaseAddress = TimerBase (FixedPcdGet32(PcdOmap35xxArchTimer));
-  TISR = TimerBaseAddress + GPTIMER_TISR;
-  TCLR = TimerBaseAddress + GPTIMER_TCLR;
-  TLDR = TimerBaseAddress + GPTIMER_TLDR;
-  TCRR = TimerBaseAddress + GPTIMER_TCRR;
-  TIER = TimerBaseAddress + GPTIMER_TIER;
+  
+  // Initialize DGT timer
+
+  // disable timer 
+  MmioWrite32(DGT_ENABLE, 0);
+  
+
+  // DGT uses LPXO source which is 27MHz.
+  // Set clock divider to 4,ticks_per_sec = 6750000(27 MHz / 4).
+  MmioWrite32(DGT_CLK_CTL, 3);
+  
+  
 
   // Disable the timer
   Status = TimerDriverSetTimerPeriod (&gTimer, 0);
   ASSERT_EFI_ERROR (Status);
 
   // Install interrupt handler
-  gVector = InterruptVectorForTimer (FixedPcdGet32(PcdOmap35xxArchTimer));
+  gVector = INT_DEBUG_TIMER_EXP;
   Status = gInterrupt->RegisterInterruptSource (gInterrupt, gVector, TimerInterruptHandler);
   ASSERT_EFI_ERROR (Status);
 
   // Turn on the functional clock for Timer
-  MmioOr32 (CM_FCLKEN_PER, CM_FCLKEN_PER_EN_GPT3_ENABLE);
+  //MmioOr32 (CM_FCLKEN_PER, CM_FCLKEN_PER_EN_GPT3_ENABLE);
 
   // Set up default timer
   Status = TimerDriverSetTimerPeriod (&gTimer, FixedPcdGet32(PcdTimerPeriod));
@@ -372,4 +400,17 @@ TimerInitialize (
 
   return Status;
 }
+
+//static void wait_for_timer_op(void)
+//{
+//	while (readl(SPSS_TIMER_STATUS) & SPSS_TIMER_STATUS_DGT_EN);
+//}
+
+//void platform_uninit_timer(void)
+//{
+//	writel(0, DGT_ENABLE);
+//	wait_for_timer_op();
+//	writel(0, DGT_CLEAR);
+//	wait_for_timer_op();
+//}
 

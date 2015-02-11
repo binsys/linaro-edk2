@@ -40,19 +40,19 @@ TimerConstructor (
   VOID
   )
 {
-	DEBUG ((EFI_D_ERROR, "TimerLib:TimerConstructor need re-mpl!!!\n"));
+	//DEBUG ((EFI_D_ERROR, "TimerLib:TimerConstructor need re-mpl!!!\n"));
 
 	/* Initialize DGT timer */
 	/* disable timer */
 	//writel(0, DGT_ENABLE);
-	MmioWrite32(DGT_ENABLE,0);
+	//MmioWrite32(DGT_ENABLE,0);
 	
 
 	/* DGT uses LPXO source which is 27MHz.
 	 * Set clock divider to 4.
 	 */
 	//writel(3, DGT_CLK_CTL);
-	MmioWrite32(DGT_CLK_CTL,3);
+	//MmioWrite32(DGT_CLK_CTL,3);
 
 	//ticks_per_sec = 6750000;	/* (27 MHz / 4) */
 	return EFI_SUCCESS;

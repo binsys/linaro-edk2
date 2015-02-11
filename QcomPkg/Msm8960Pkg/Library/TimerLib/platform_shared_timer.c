@@ -48,16 +48,13 @@
 
 #define GPT_ENABLE_CLR_ON_MATCH_EN        2
 #define GPT_ENABLE_EN                     1
-#define DGT_ENABLE_CLR_ON_MATCH_EN        2
-#define DGT_ENABLE_EN                     1
 
-#define SPSS_TIMER_STATUS_DGT_EN    (1 << 0)
 
 //static platform_timer_callback timer_callback;
 //static void *timer_arg;
 //static time_t timer_interval;
 
-static volatile UINT32 ticks;
+//static volatile UINT32 ticks;
 
 //static enum handler_return timer_irq(void *arg)
 //{
@@ -163,8 +160,8 @@ void udelay(unsigned usecs)
 }
 
 /* Return current time in micro seconds */
-bigtime_t current_time_hires(void)
-{
-	return ticks * 1000ULL;
-}
+//bigtime_t current_time_hires(void)
+//{
+//	return ticks * 1000ULL;
+//}
 

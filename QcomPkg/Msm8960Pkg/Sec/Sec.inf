@@ -51,8 +51,9 @@
   MemoryAllocationLib
   PrePiHobListPointerLib
   MsmSharedLib
-  TimerLib
+  #TimerLib
   MsmTargetLib
+  SerialPortLib
 
 [FeaturePcd]
   gEmbeddedTokenSpaceGuid.PcdCacheEnable
@@ -73,5 +74,8 @@
   gEmbeddedTokenSpaceGuid.PcdPrePiStackSize
   gEmbeddedTokenSpaceGuid.PcdPrePiStackBase
   
-  
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugGsbiID
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugGsbiBaseAddress
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugUartDmBaseAddress
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugRartDmClockRxTxBitRate
 
