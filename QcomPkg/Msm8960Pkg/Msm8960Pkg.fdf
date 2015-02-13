@@ -88,7 +88,8 @@ READ_LOCK_STATUS   = TRUE
   INF ArmPkg/Drivers/CpuDxe/CpuDxe.inf
   INF EmbeddedPkg/MetronomeDxe/MetronomeDxe.inf
   INF ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
-  INF QcomPkg/Msm8960Pkg/TimerDxe/TimerDxe.inf
+  INF QcomPkg/Msm8960Pkg/Drivers/TimerDxe/TimerDxe.inf
+  INF QcomPkg/Msm8960Pkg/Drivers/DisplayDxe/DisplayDxe.inf
   
   #INF ArmPlatformPkg/Bds/Bds.inf
   INF QcomPkg/Msm8960Pkg/Bds/Bds.inf

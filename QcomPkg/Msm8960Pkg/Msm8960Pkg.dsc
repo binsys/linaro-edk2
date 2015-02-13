@@ -51,8 +51,21 @@
   UefiRuntimeServicesTableLib      |    MdePkg/Library/UefiRuntimeServicesTableLib/UefiRuntimeServicesTableLib.inf
   
   PeCoffExtraActionLib             |    ArmPkg/Library/DebugPeCoffExtraActionLib/DebugPeCoffExtraActionLib.inf
-
   
+  
+  
+  SerialPortLib                    |    QcomPkg/Library/MsmSerialPortLib/MsmSerialPortLib.inf
+  MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
+  MsmClock                         |    QcomPkg/Library/MsmClock/MsmClock.inf
+
+  TimerLib                         |    QcomPkg/Msm8960Pkg/Library/MsmTargetTimerLib/MsmTargetTimerLib.inf
+  MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/MsmTargetLib/MsmTargetLib.inf
+  MsmTargetPmicLib                 |    QcomPkg/Msm8960Pkg/Library/MsmTargetPmicLib/MsmTargetPmicLib.inf
+  MsmTargetGpioLib                 |    QcomPkg/Msm8960Pkg/Library/MsmTargetGpioLib/MsmTargetGpioLib.inf
+  EfiResetSystemLib                |    QcomPkg/Msm8960Pkg/Library/MsmTargetResetSystemLib/MsmTargetResetSystemLib.inf
+  RealTimeClockLib                 |    QcomPkg/Msm8960Pkg/Library/MsmTargetRealTimeClockLib/MsmTargetRealTimeClockLib.inf
+  MsmTargetClockLib                |    QcomPkg/Msm8960Pkg/Library/MsmTargetClockLib/MsmTargetClockLib.inf
+  MsmTargetLcdLib                  |    QcomPkg/Msm8960Pkg/Library/MsmTargetLcdLib/MsmTargetLcdLib.inf
   
 [LibraryClasses.common.SEC]
   ArmLib                           |    ArmPkg/Library/ArmLib/ArmV7/ArmV7LibPrePi.inf
@@ -67,11 +80,7 @@
   
   LzmaDecompressLib                |    IntelFrameworkModulePkg/Library/LzmaCustomDecompressLib/LzmaCustomDecompressLib.inf
   
-  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
-  TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
-  MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
-  MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
-  
+
   
 [LibraryClasses.common.PEI_CORE]
 
@@ -90,10 +99,7 @@
   
   ReportStatusCodeLib              |    IntelFrameworkModulePkg/Library/DxeReportStatusCodeLibFramework/DxeReportStatusCodeLib.inf
 
-  MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
-  MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
-  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
-  TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
+
 
 [LibraryClasses.common.DXE_DRIVER]
 
@@ -120,10 +126,7 @@
   HiiLib                           |    MdeModulePkg/Library/UefiHiiLib/UefiHiiLib.inf
   UefiHiiServicesLib               |    MdeModulePkg/Library/UefiHiiServicesLib/UefiHiiServicesLib.inf
   
-  MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
-  MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
-  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
-  TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
+
   
 
 [LibraryClasses.common.DXE_RUNTIME_DRIVER]
@@ -135,13 +138,7 @@
   
   CapsuleLib                       |    MdeModulePkg/Library/DxeCapsuleLibNull/DxeCapsuleLibNull.inf
   
-  MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
-  MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
-  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
-  TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
 
-  EfiResetSystemLib                |    QcomPkg/Msm8960Pkg/Library/ResetSystemLib/ResetSystemLib.inf
-  RealTimeClockLib                 |    QcomPkg/Msm8960Pkg/Library/RealTimeClockLib/RealTimeClockLib.inf
 
 [LibraryClasses.common.UEFI_APPLICATION]
 
@@ -157,10 +154,9 @@
   HiiLib                           |    MdeModulePkg/Library/UefiHiiLib/UefiHiiLib.inf
   UefiHiiServicesLib               |    MdeModulePkg/Library/UefiHiiServicesLib/UefiHiiServicesLib.inf
   
-  MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
-  MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/Msm8960Lib/Msm8960Lib.inf
-  SerialPortLib                    |    QcomPkg/Library/SerialPortLib/SerialPortLib.inf
-  TimerLib                         |    QcomPkg/Msm8960Pkg/Library/TimerLib/TimerLib.inf
+
+
+
   
 [LibraryClasses.ARM]
   #
@@ -371,7 +367,9 @@
       ArmGicLib|ArmPkg/Drivers/ArmGic/ArmGicLib.inf
   }
   
-  QcomPkg/Msm8960Pkg/TimerDxe/TimerDxe.inf
+  QcomPkg/Msm8960Pkg/Drivers/TimerDxe/TimerDxe.inf
+  
+  QcomPkg/Msm8960Pkg/Drivers/DisplayDxe/DisplayDxe.inf
  
   QcomPkg/Msm8960Pkg/Bds/Bds.inf
   #ArmPlatformPkg/Bds/Bds.inf

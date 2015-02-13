@@ -38,8 +38,7 @@ struct clk_ops;
 		.freq_hz = FREQ_END, \
 	}
 
-#define container_of(ptr, type, member) \
-	((type *)((addr_t)(ptr) - offsetof(type, member)))
+
 
 /*
 * Bit manipulation macros

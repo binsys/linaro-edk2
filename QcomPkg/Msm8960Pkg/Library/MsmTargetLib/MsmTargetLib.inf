@@ -1,0 +1,35 @@
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = MsmTargetLib
+  FILE_GUID                      = 2810681c-ccc5-4472-826e-257b77d6c775
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = MsmTargetLib
+
+
+#
+#  VALID_ARCHITECTURES           = ARM IA32 X64 IPF EBC
+#
+
+[Sources.common]
+  MsmTargetLib.c
+  qcom_msm8960_timer.c
+
+[LibraryClasses]
+  DebugLib
+  IoLib
+  ArmLib
+  MsmClock
+  MsmTargetPmicLib
+
+[Packages]
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdePkg/MdePkg.dec
+  QcomPkg/QcomPkg.dec
+  ArmPkg/ArmPkg.dec
+  QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
+
+[FixedPcd]
+  #gOmap35xxTokenSpaceGuid.PcdOmap35xxConsoleUart
+

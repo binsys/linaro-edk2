@@ -37,4 +37,5 @@
   gQcomPkgTokenSpaceGuid.PcdQcomDebugGsbiBaseAddress           |0x16400000|UINT32|0x00000001
   gQcomPkgTokenSpaceGuid.PcdQcomDebugUartDmBaseAddress         |0x16440000|UINT32|0x00000002
   gQcomPkgTokenSpaceGuid.PcdQcomDebugRartDmClockRxTxBitRate    |0x000000ff|UINT32|0x00000003
+  
 

@@ -15,11 +15,11 @@
 
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = MsmSharedLib
-  FILE_GUID                      = 7f9caf32-a92a-4c65-a43e-8626645da5e9
+  BASE_NAME                      = MsmSerialPortLib
+  FILE_GUID                      = 97546cbd-c0ff-4c48-ab0b-e4f58862acd3
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
-  LIBRARY_CLASS                  = MsmSharedLib
+  LIBRARY_CLASS                  = SerialPortLib
 
 
 #
@@ -27,19 +27,32 @@
 #
 
 [Sources.common]
-  MsmSharedLib.c
+  MsmSerialPortLib.c
+  qcom_uart_dm_init.c
+  qcom_uart_dm_write.c
+  qcom_uart_dm_read.c
 
 [LibraryClasses]
   DebugLib
   IoLib
   TimerLib
   ArmLib
+  MsmSharedLib
+  MsmTargetLib
+  MsmTargetGpioLib
+  MsmTargetClockLib
 
 [Packages]
   EmbeddedPkg/EmbeddedPkg.dec
-  ArmPkg/ArmPkg.dec
   MdePkg/MdePkg.dec
+  
+  EmbeddedPkg/EmbeddedPkg.dec
+  ArmPkg/ArmPkg.dec
   QcomPkg/QcomPkg.dec
 
 [FixedPcd]
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugGsbiID
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugGsbiBaseAddress
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugUartDmBaseAddress
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugRartDmClockRxTxBitRate
 

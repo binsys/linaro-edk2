@@ -1,0 +1,33 @@
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = MsmTargetGpioLib
+  FILE_GUID                      = 7447be9e-f401-4fa3-be27-e20b16d6420f
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = MsmTargetGpioLib
+
+
+#
+#  VALID_ARCHITECTURES           = ARM IA32 X64 IPF EBC
+#
+
+[Sources.common]
+  qcom_msm8960_gpio.c
+
+[LibraryClasses]
+  DebugLib
+  IoLib
+  ArmLib
+  MsmClock
+  MsmTargetPmicLib
+
+[Packages]
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdePkg/MdePkg.dec
+  QcomPkg/QcomPkg.dec
+  ArmPkg/ArmPkg.dec
+  QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
+
+[FixedPcd]
+

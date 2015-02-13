@@ -38,8 +38,7 @@
 struct clk;
 struct clk_ops;
 
-#define container_of(ptr, type, member) \
-	((type *)((addr_t)(ptr) - offsetof(type, member)))
+
 
 
 /**
