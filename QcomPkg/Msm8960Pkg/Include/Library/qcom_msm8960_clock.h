@@ -291,11 +291,10 @@ struct pll_rate {
 #define DSI_MD_VAL            0x000003FB
 #define DSI_CC_VAL            0x00000005
 
-void config_mmss_clk(UINT32 ns,
-	UINT32 md,
-	UINT32 cc,
-	UINT32 ns_addr, UINT32 md_addr, UINT32 cc_addr);
-void config_mdp_lut_clk(void);
-void mdp_clock_init(void);
-void msm_clocks_init(VOID);
+VOID config_mmss_clk(UINT32 ns,UINT32 md,UINT32 cc,UINT32 ns_addr, UINT32 md_addr, UINT32 cc_addr);
+VOID config_mdp_lut_clk(VOID);
+VOID mdp_clock_init(VOID);
+VOID msm_clocks_init(VOID);
+void mmss_clock_init(void);
+void mmss_clock_disable(void);
 #endif

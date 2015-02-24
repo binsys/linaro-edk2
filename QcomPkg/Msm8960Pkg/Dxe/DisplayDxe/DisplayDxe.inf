@@ -1,0 +1,71 @@
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = Msm8960DisplayDxe
+  FILE_GUID                      = 407B4008-BF5B-11DF-9547-CF16E0D72085
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = LcdGraphicsOutputDxeInitialize
+
+[Sources.common]
+  LcdGraphicsOutputDxe.c
+  LcdGraphicsOutputGop.c
+  LcdGraphicsOutputBlt.c
+  Mms8960Lcd.c
+  lk/target_display.c
+  lk/mipi_lgd_cmd_hd720p.c
+  lk/mipi_dsi_phy.c
+  lk/mipi_dsi.c
+  lk/mdp4.c
+  lk/display.c
+  lk/fbcon.c
+
+
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+
+  QcomPkg/QcomPkg.dec
+  
+  QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
+
+[LibraryClasses]
+  ArmLib
+  UefiLib
+  BaseLib
+  DebugLib
+  
+  UefiDriverEntryPoint
+  UefiBootServicesTableLib
+  IoLib
+  BaseMemoryLib
+  
+  MsmTargetClockLib
+  MsmTargetGpioLib
+  MsmTargetLib
+  
+  MsmTargetI2C
+  
+  TimerLib
+
+[Protocols]
+  gEfiDevicePathProtocolGuid                    # Produced
+  gEfiGraphicsOutputProtocolGuid                # Produced
+  
+  gEfiEdidDiscoveredProtocolGuid                # Produced
+  gEfiEdidActiveProtocolGuid                    # Produced
+  
+  gQcomPM8921ProtocolGuid
+
+
+[FixedPcd]
+  gMsm8960TokenSpaceGuid.PcdMsm8960DisplayBase
+
+[FeaturePcd]
+  gArmPlatformTokenSpaceGuid.PcdGopDisableOnExitBootServices
+
+[Depex]
+  gEfiCpuArchProtocolGuid AND gQcomPM8921ProtocolGuid

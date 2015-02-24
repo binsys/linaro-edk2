@@ -41,13 +41,15 @@
 #endif
 typedef int bool;
 
-enum clk_reset_action {
+enum clk_reset_action 
+{
 	CLK_RESET_DEASSERT = 0,
 	CLK_RESET_ASSERT = 1
 };
 
 struct clk;
-struct clk_ops {
+struct clk_ops 
+{
 	int(*enable)(struct clk *clk);
 	void(*disable)(struct clk *clk);
 	void(*auto_off)(struct clk *clk);
@@ -70,7 +72,8 @@ struct clk_ops {
 * @count: enable refcount
 * @lock: protects clk_enable()/clk_disable() path and @count
 */
-struct clk {
+struct clk 
+{
 	UINT32 flags;
 	UINT32 rate;
 	struct clk_ops *ops;
@@ -166,12 +169,14 @@ struct clk *clk_get_parent(struct clk *clk);
 */
 int clk_get_set_enable(char *id, unsigned long rate, bool enable);
 
-struct clk_lookup {
+struct clk_lookup 
+{
 	const char		*con_id;
 	struct clk		*clk;
 };
 
-struct clk_list {
+struct clk_list 
+{
 	struct clk_lookup *clist;
 	unsigned num;
 };

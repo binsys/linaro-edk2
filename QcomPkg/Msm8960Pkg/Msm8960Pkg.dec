@@ -21,11 +21,14 @@
 ################################################################################
 [Includes.common]
   Include                        # Root include for the package
-
+  
+[Protocols]
 
 [Guids.common]
   # {D2624F1B-7929-45B6-8E3B-4B4C52F6258A}
   gMsm8960TokenSpaceGuid    =  { 0xd2624f1b, 0x7929, 0x45b6, { 0x8e, 0x3b, 0x4b, 0x4c, 0x52, 0xf6, 0x25, 0x8a } }
+
+  gArmTokenSpaceGuid       = { 0xBB11ECFE, 0x820F, 0x4968, { 0xBB, 0xA6, 0xF7, 0x6A, 0xFE, 0x30, 0x25, 0x96 } }
   
 [PcdsFixedAtBuild.common]
   gMsm8960TokenSpaceGuid.PcdMsm8960DisplayBase              |0x89000000|UINT32|0x00000001

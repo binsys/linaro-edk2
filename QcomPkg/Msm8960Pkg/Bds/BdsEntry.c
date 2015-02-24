@@ -106,6 +106,10 @@ BdsEntry (
 
     gConsolePresent = TRUE;
   }
+  else
+  {
+    DEBUG((EFI_D_ERROR, "LocateHandleBuffer gEfiSimpleTextOutProtocolGuid failed. Status: %r\n", Status));
+  }
 
 
   Status = gBS->LocateHandleBuffer (ByProtocol, &gEfiSimpleTextInProtocolGuid, NULL, &NoHandles, &Buffer);
@@ -116,6 +120,10 @@ BdsEntry (
     ASSERT_EFI_ERROR (Status);
 
     FreePool (Buffer);
+  }
+  else
+  {
+    DEBUG((EFI_D_ERROR, "LocateHandleBuffer gEfiSimpleTextInProtocolGuid failed. Status: %r\n", Status));
   }
 
   //
@@ -208,6 +216,9 @@ BdsEntry (
       DEBUG((EFI_D_ERROR, "Boot from Shell failed. Status: %r\n", Status));
     }
   }
+  
+  
+  gST->ConOut->OutputString (gST->ConOut, L"ASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDF\n\r");
 
   //
   // EFI does not define the behaviour if all boot attemps fail and the last one returns.

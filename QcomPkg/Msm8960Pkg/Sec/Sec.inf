@@ -51,7 +51,7 @@
   MemoryAllocationLib
   PrePiHobListPointerLib
   MsmSharedLib
-  MsmClock
+  MsmClockLib
   #TimerLib
   MsmTargetLib
   SerialPortLib

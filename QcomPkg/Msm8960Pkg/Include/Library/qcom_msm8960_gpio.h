@@ -81,4 +81,6 @@ void msm8960_keypad_gpio_init(VOID);
 void msm8930_keypad_gpio_init(VOID);
 void pmic8921_gpio_set(UINT32 gpio, UINT32 level);
 UINT32 pmic8921_gpio_get(UINT32 gpio);
+void mi_display_gpio_init(void);
+int pm8921_ldo_clear_voltage(UINT32 ldo_id);
 #endif

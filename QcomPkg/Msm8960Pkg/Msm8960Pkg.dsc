@@ -56,16 +56,20 @@
   
   SerialPortLib                    |    QcomPkg/Library/MsmSerialPortLib/MsmSerialPortLib.inf
   MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
-  MsmClock                         |    QcomPkg/Library/MsmClock/MsmClock.inf
-
+  MsmClockLib                      |    QcomPkg/Library/MsmClockLib/MsmClockLib.inf
+  MsmSSBILib                       |    QcomPkg/Library/MsmSSBILib/MsmSSBILib.inf
+  
+  
+  
   TimerLib                         |    QcomPkg/Msm8960Pkg/Library/MsmTargetTimerLib/MsmTargetTimerLib.inf
   MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/MsmTargetLib/MsmTargetLib.inf
-  MsmTargetPmicLib                 |    QcomPkg/Msm8960Pkg/Library/MsmTargetPmicLib/MsmTargetPmicLib.inf
   MsmTargetGpioLib                 |    QcomPkg/Msm8960Pkg/Library/MsmTargetGpioLib/MsmTargetGpioLib.inf
   EfiResetSystemLib                |    QcomPkg/Msm8960Pkg/Library/MsmTargetResetSystemLib/MsmTargetResetSystemLib.inf
   RealTimeClockLib                 |    QcomPkg/Msm8960Pkg/Library/MsmTargetRealTimeClockLib/MsmTargetRealTimeClockLib.inf
   MsmTargetClockLib                |    QcomPkg/Msm8960Pkg/Library/MsmTargetClockLib/MsmTargetClockLib.inf
-  MsmTargetLcdLib                  |    QcomPkg/Msm8960Pkg/Library/MsmTargetLcdLib/MsmTargetLcdLib.inf
+  MsmTargetMmcLib                  |    QcomPkg/Msm8960Pkg/Library/MsmTargetMmcLib/MsmTargetMmcLib.inf
+  MsmTargetI2C                     |    QcomPkg/Msm8960Pkg/Library/MsmTargetI2C/MsmTargetI2C.inf
+  
   
 [LibraryClasses.common.SEC]
   ArmLib                           |    ArmPkg/Library/ArmLib/ArmV7/ArmV7LibPrePi.inf
@@ -126,7 +130,7 @@
   HiiLib                           |    MdeModulePkg/Library/UefiHiiLib/UefiHiiLib.inf
   UefiHiiServicesLib               |    MdeModulePkg/Library/UefiHiiServicesLib/UefiHiiServicesLib.inf
   
-
+  MsmPM8921Lib                     |    QcomPkg/Library/MsmPM8921Lib/MsmPM8921Lib.inf
   
 
 [LibraryClasses.common.DXE_RUNTIME_DRIVER]
@@ -138,7 +142,7 @@
   
   CapsuleLib                       |    MdeModulePkg/Library/DxeCapsuleLibNull/DxeCapsuleLibNull.inf
   
-
+  
 
 [LibraryClasses.common.UEFI_APPLICATION]
 
@@ -190,6 +194,11 @@
   gArmTokenSpaceGuid.PcdRelocateVectorTable                        |TRUE
   gArmTokenSpaceGuid.PcdCpuDxeProduceDebugSupport                  |TRUE
   #gArmTokenSpaceGuid.PcdDebuggerExceptionSupport                   |TRUE
+  
+  ## If TRUE, Graphics Output Protocol will be installed on virtual handle created by ConsplitterDxe.
+  #  It could be set FALSE to save size.
+  #gEfiMdeModulePkgTokenSpaceGuid.PcdConOutGopSupport|TRUE
+  gEfiMdePkgTokenSpaceGuid.PcdUgaConsumeSupport|FALSE
 
 [PcdsFixedAtBuild.common]
 
@@ -287,7 +296,10 @@
   #1 ticks about 148ns
   gEmbeddedTokenSpaceGuid.PcdEmbeddedPerformanceCounterPeriodInNanoseconds  |148
 
-
+[PcdsPatchableInModule]
+  # Console Resolution (Full HD)
+  gEfiMdeModulePkgTokenSpaceGuid.PcdVideoHorizontalResolution|720
+  gEfiMdeModulePkgTokenSpaceGuid.PcdVideoVerticalResolution|1280
   
 ################################################################################
 #
@@ -313,48 +325,6 @@
       NULL|EmbeddedPkg/Library/LzmaHobCustomDecompressLib/LzmaHobCustomDecompressLib.inf
   }
   
-  
-  
-  #Load order
-  #EFI_CORE_PROTOCOL_NOTIFY_ENTRY  mArchProtocols[] = {
-    #{ &gEfiSecurityArchProtocolGuid,         (VOID **)&gSecurity,      NULL, NULL, FALSE },
-    #{ &gEfiCpuArchProtocolGuid,              (VOID **)&gCpu,           NULL, NULL, FALSE },
-    #{ &gEfiMetronomeArchProtocolGuid,        (VOID **)&gMetronome,     NULL, NULL, FALSE },
-  #{ &gEfiTimerArchProtocolGuid,            (VOID **)&gTimer,         NULL, NULL, FALSE },
-  #{ &gEfiBdsArchProtocolGuid,              (VOID **)&gBds,           NULL, NULL, FALSE },
-  #{ &gEfiWatchdogTimerArchProtocolGuid,    (VOID **)&gWatchdogTimer, NULL, NULL, FALSE },
-    #{ &gEfiRuntimeArchProtocolGuid,          (VOID **)&gRuntime,       NULL, NULL, FALSE },
-    #{ &gEfiVariableArchProtocolGuid,         (VOID **)NULL,            NULL, NULL, FALSE },
-    #{ &gEfiVariableWriteArchProtocolGuid,    (VOID **)NULL,            NULL, NULL, FALSE },
-    #{ &gEfiCapsuleArchProtocolGuid,          (VOID **)NULL,            NULL, NULL, FALSE },
-    #{ &gEfiMonotonicCounterArchProtocolGuid, (VOID **)NULL,            NULL, NULL, FALSE },
-    #{ &gEfiResetArchProtocolGuid,            (VOID **)NULL,            NULL, NULL, FALSE },
-    #{ &gEfiRealTimeClockArchProtocolGuid,    (VOID **)NULL,            NULL, NULL, FALSE },
-  #{ NULL,                                  (VOID **)NULL,            NULL, NULL, FALSE }
-  #};
-  
-  
-  
-  
-  #GLOBAL_REMOVE_IF_UNREFERENCED CONST GUID_TO_STRING_PROTOCOL_ENTRY mMissingProtocols[] = {
-    #{ &gEfiSecurityArchProtocolGuid,         "Security"           },
-    #{ &gEfiCpuArchProtocolGuid,              "CPU"                },
-    #{ &gEfiMetronomeArchProtocolGuid,        "Metronome"          },
-  #{ &gEfiTimerArchProtocolGuid,            "Timer"              },
-  #{ &gEfiBdsArchProtocolGuid,              "Bds"                },
-  #{ &gEfiWatchdogTimerArchProtocolGuid,    "Watchdog Timer"     },
-    #{ &gEfiRuntimeArchProtocolGuid,          "Runtime"            },
-    #{ &gEfiVariableArchProtocolGuid,         "Variable"           },
-    #{ &gEfiVariableWriteArchProtocolGuid,    "Variable Write"     },
-    #{ &gEfiCapsuleArchProtocolGuid,          "Capsule"            },
-    #{ &gEfiMonotonicCounterArchProtocolGuid, "Monotonic Counter"  },
-    #{ &gEfiResetArchProtocolGuid,            "Reset"              },
-    #{ &gEfiRealTimeClockArchProtocolGuid,    "Real Time Clock"    },
-  #{ NULL,                                  ""                   }
-  #};
-  
-  
-  
   # Needed
   MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
   
@@ -367,10 +337,19 @@
       ArmGicLib|ArmPkg/Drivers/ArmGic/ArmGicLib.inf
   }
   
-  QcomPkg/Msm8960Pkg/Drivers/TimerDxe/TimerDxe.inf
+  QcomPkg/Msm8960Pkg/Dxe/TimerDxe/TimerDxe.inf
   
-  QcomPkg/Msm8960Pkg/Drivers/DisplayDxe/DisplayDxe.inf
+  QcomPkg/Dxe/PM8921Dxe/PM8921Dxe.inf
+  
+  QcomPkg/Msm8960Pkg/Dxe/DisplayDxe/DisplayDxe.inf
+  
+  MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
+  MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
+  MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf  
+  MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf 
  
+  MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
+  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
   QcomPkg/Msm8960Pkg/Bds/Bds.inf
   #ArmPlatformPkg/Bds/Bds.inf
   

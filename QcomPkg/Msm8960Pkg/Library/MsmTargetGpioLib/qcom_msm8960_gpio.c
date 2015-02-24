@@ -47,90 +47,92 @@ struct gpioregs
 	unsigned oe;
 };
 
-static gpioregs GPIO_REGS[] = {
+static gpioregs GPIO_REGS[] =
+{
 	{
-		.out =  GPIO_OUT_0,
-		.in =   GPIO_IN_0,
-		.oe =   GPIO_OE_0,
+		.out = GPIO_OUT_0,
+		.in = GPIO_IN_0,
+		.oe = GPIO_OE_0,
 	},
 	{
-		.out =  GPIO_OUT_1,
-		.in =   GPIO_IN_1,
-		.oe =   GPIO_OE_1,
+		.out = GPIO_OUT_1,
+		.in = GPIO_IN_1,
+		.oe = GPIO_OE_1,
 	},
 	{
-		.out =  GPIO_OUT_2,
-		.in =   GPIO_IN_2,
-		.oe =   GPIO_OE_2,
+		.out = GPIO_OUT_2,
+		.in = GPIO_IN_2,
+		.oe = GPIO_OE_2,
 	},
 };
 
 static gpioregs *find_gpio(unsigned n, unsigned *bit)
 {
-	if (n > 89) {
-		DEBUG((EFI_D_WARN,"Wrong GPIO %d\n", n));
-		//dprintf(CRITICAL, "Wrong GPIO %d\n", n);
+	if (n > 89)
+	{
+		DEBUG((EFI_D_WARN, "Wrong GPIO %d\n", n));
 		return 0;
 	}
-	if (n > 63) {
+	if (n > 63)
+	{
 		*bit = 1 << (n - 64);
 		return GPIO_REGS + 2;
 	}
-	if (n > 31) {
+	if (n > 31)
+	{
 		*bit = 1 << (n - 32);
 		return GPIO_REGS + 1;
 	}
+
 	*bit = 1 << n;
 	return GPIO_REGS + 0;
 }
 
 int gpio_direction(unsigned n, unsigned flags)
 {
-        gpioregs *r;
-        unsigned b;
-        unsigned v;
+	gpioregs *r;
+	unsigned b;
+	unsigned v;
 
-        if ((r = find_gpio(n, &b)) == 0)
-                return -1;
+	if ((r = find_gpio(n, &b)) == 0)
+		return -1;
 
-        v = readl(r->oe);
-        if (flags & GPIO_OUTPUT)
-                writel(v | b, r->oe);
-        else
-                writel(v & (~b), r->oe);
-        return 0;
+	v = readl(r->oe);
+	if (flags & GPIO_OUTPUT)
+		writel(v | b, r->oe);
+	else
+		writel(v & (~b), r->oe);
+	return 0;
 }
 
 void gpio_output_value(unsigned n, unsigned on)
 {
-        gpioregs *r;
-        unsigned b;
-        unsigned v;
+	gpioregs *r;
+	unsigned b;
+	unsigned v;
 
-        if ((r = find_gpio(n, &b)) == 0)
+	if ((r = find_gpio(n, &b)) == 0)
 		return;
 
-        v = readl(r->out);
-        if (on)
-                writel(v | b, r->out);
-        else
-                writel(v & (~b), r->out);
+	v = readl(r->out);
+	if (on)
+		writel(v | b, r->out);
+	else
+		writel(v & (~b), r->out);
 }
 
 int gpio_input_value(unsigned n)
 {
-        gpioregs *r;
-        unsigned b;
+	gpioregs *r;
+	unsigned b;
 
-        if ((r = find_gpio(n, &b)) == 0)
+	if ((r = find_gpio(n, &b)) == 0)
 		return 0;
 
-        return (readl(r->in) & b) ? 1 : 0;
+	return (readl(r->in) & b) ? 1 : 0;
 }
 
-void gpio_tlmm_config(UINT32 gpio, UINT8 func,
-		      UINT8 dir, UINT8 pull,
-		      UINT8 drvstr, UINT32 enable)
+void gpio_tlmm_config(UINT32 gpio, UINT8 func,UINT8 dir, UINT8 pull,UINT8 drvstr, UINT32 enable)
 {
 	unsigned int val = 0;
 	val |= pull;
@@ -155,6 +157,8 @@ UINT32 gpio_get(UINT32 gpio)
 	return readl(addr) ? 1 : 0;
 }
 
+
+
 /* TODO: this and other code below in this file should ideally by in target dir.
  * keeping it here for this brigup.
  */
@@ -165,19 +169,17 @@ UINT32 gpio_get(UINT32 gpio)
 
 void gpio_config_uart_dm(UINT8 id)
 {
-	gpio_tlmm_config(MSM_BOOT_UART_SWITCH_GPIO_MITWOA, 0, GPIO_OUTPUT,GPIO_NO_PULL, GPIO_16MA, GPIO_ENABLE);
+	gpio_tlmm_config(MSM_BOOT_UART_SWITCH_GPIO_MITWOA, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_16MA, GPIO_ENABLE);
 	gpio_direction(MSM_BOOT_UART_SWITCH_GPIO_MITWOA, GPIO_OUTPUT);
 	gpio_set(MSM_BOOT_UART_SWITCH_GPIO_MITWOA, GPIO_IN_OUT_HIGH);
 
-	switch (id) 
+	switch (id)
 	{
 	case GSBI_ID_5:
 		/* configure rx gpio */
-		gpio_tlmm_config(23, 1, GPIO_INPUT, GPIO_NO_PULL,
-						 GPIO_8MA, GPIO_DISABLE);
+		gpio_tlmm_config(23, 1, GPIO_INPUT, GPIO_NO_PULL,GPIO_8MA, GPIO_DISABLE);
 		/* configure tx gpio */
-		gpio_tlmm_config(22, 1, GPIO_OUTPUT, GPIO_NO_PULL,
-						 GPIO_8MA, GPIO_DISABLE);
+		gpio_tlmm_config(22, 1, GPIO_OUTPUT, GPIO_NO_PULL,GPIO_8MA, GPIO_DISABLE);
 		break;
 
 	default:
@@ -188,30 +190,27 @@ void gpio_config_uart_dm(UINT8 id)
 /* Configure gpio for i2c - based on gsbi id */
 void gpio_config_i2c(UINT8 id)
 {
-        switch (id) {
-        case GSBI_ID_10:
-                gpio_tlmm_config(73, 2, GPIO_OUTPUT, GPIO_NO_PULL,
-                                 GPIO_2MA, GPIO_DISABLE);
-                gpio_tlmm_config(74, 2, GPIO_OUTPUT, GPIO_NO_PULL,
-                                 GPIO_2MA, GPIO_DISABLE);
-        case GSBI_ID_1:
-                gpio_tlmm_config(20, 1, GPIO_OUTPUT, GPIO_NO_PULL,
-                                 GPIO_2MA, GPIO_DISABLE);
-                gpio_tlmm_config(21, 1, GPIO_OUTPUT, GPIO_NO_PULL,
-                                 GPIO_2MA, GPIO_DISABLE);
-                break;
-        default:
-                ASSERT(0);
-        }
+	switch (id) 
+	{
+	case GSBI_ID_10:
+		gpio_tlmm_config(73, 2, GPIO_OUTPUT, GPIO_NO_PULL,GPIO_2MA, GPIO_DISABLE);
+		gpio_tlmm_config(74, 2, GPIO_OUTPUT, GPIO_NO_PULL,GPIO_2MA, GPIO_DISABLE);
+	case GSBI_ID_1:
+		gpio_tlmm_config(20, 1, GPIO_OUTPUT, GPIO_NO_PULL,GPIO_2MA, GPIO_DISABLE);
+		gpio_tlmm_config(21, 1, GPIO_OUTPUT, GPIO_NO_PULL,GPIO_2MA, GPIO_DISABLE);
+		break;
+	default:
+		ASSERT(0);
+	}
 }
 
-struct pm8xxx_gpio_init {
+struct pm8xxx_gpio_init 
+{
 	UINT32 gpio;
 	struct pm8921_gpio config;
 };
 
-#define PM8XXX_GPIO_INIT(_gpio, _dir, _buf, _val, _pull, _vin, _out_strength, \
-			_func, _inv, _disable) \
+#define PM8XXX_GPIO_INIT(_gpio, _dir, _buf, _val, _pull, _vin, _out_strength, _func, _inv, _disable) \
 { \
 	.gpio	= _gpio, \
 	.config	= { \
@@ -246,16 +245,10 @@ struct pm8xxx_gpio_init {
 			PM_GPIO_STRENGTH_NO, \
 			PM_GPIO_FUNC_NORMAL, 0, 0)
 
-/* Initial pm8038 GPIO configurations */
-static struct pm8xxx_gpio_init pm8038_keypad_gpios[] = {
-	/* keys GPIOs */
-	PM8XXX_GPIO_INPUT(PM_GPIO(3), PM_GPIO_PULL_UP_30),
-	PM8XXX_GPIO_INPUT(PM_GPIO(8), PM_GPIO_PULL_UP_30),
-	PM8XXX_GPIO_INPUT(PM_GPIO(10), PM_GPIO_PULL_UP_30),
-	PM8XXX_GPIO_INPUT(PM_GPIO(11), PM_GPIO_PULL_UP_30),
-};
 
-static struct pm8xxx_gpio_init pm8921_keypad_gpios[] = {
+
+static struct pm8xxx_gpio_init pm8921_keypad_gpios[] = 
+{
 	/* keys GPIOs */
 	PM8XXX_GPIO_INPUT(PM_GPIO(1), PM_GPIO_PULL_UP_31_5),
 	PM8XXX_GPIO_INPUT(PM_GPIO(2), PM_GPIO_PULL_UP_31_5),
@@ -264,7 +257,8 @@ static struct pm8xxx_gpio_init pm8921_keypad_gpios[] = {
 };
 
 /* pm8921 GPIO configuration for APQ8064 keypad */
-static struct pm8xxx_gpio_init pm8921_keypad_gpios_apq[] = {
+static struct pm8xxx_gpio_init pm8921_keypad_gpios_apq[] = 
+{
 	/* keys GPIOs */
 	PM8XXX_GPIO_INPUT(PM_GPIO(1), PM_GPIO_PULL_UP_31_5),
 	PM8XXX_GPIO_INPUT(PM_GPIO(2), PM_GPIO_PULL_UP_31_5),
@@ -272,56 +266,28 @@ static struct pm8xxx_gpio_init pm8921_keypad_gpios_apq[] = {
 	PM8XXX_GPIO_OUTPUT(PM_GPIO(10), 0),
 };
 
+/*
 void msm8960_keypad_gpio_init()
 {
-		int i = 0;
-		int num = 0;
+	int i = 0;
+	int num = 0;
 
-		num = ARRAY_SIZE(pm8921_keypad_gpios);
+	num = ARRAY_SIZE(pm8921_keypad_gpios);
 
-		for(i=0; i < num; i++)
-		{
-			pm8921_gpio_config(pm8921_keypad_gpios[i].gpio,
-								&(pm8921_keypad_gpios[i].config));
-		}
-}
-
-void msm8930_keypad_gpio_init()
-{
-		int i = 0;
-		int num = 0;
-
-		num = ARRAY_SIZE(pm8038_keypad_gpios);
-
-		for(i=0; i < num; i++)
-		{
-			pm8921_gpio_config(pm8038_keypad_gpios[i].gpio,
-								&(pm8038_keypad_gpios[i].config));
-		}
-}
-
-void apq8064_keypad_gpio_init()
-{
-		int i = 0;
-		int num = 0;
-
-		num = ARRAY_SIZE(pm8921_keypad_gpios_apq);
-
-		for(i=0; i < num; i++)
-		{
-			pm8921_gpio_config(pm8921_keypad_gpios_apq[i].gpio,
-								&(pm8921_keypad_gpios_apq[i].config));
-		}
-}
-
+	for (i = 0; i < num; i++)
+	{
+		pm8921_gpio_config(pm8921_keypad_gpios[i].gpio,&(pm8921_keypad_gpios[i].config));
+	}
+}*/
+/*
 void pmic8921_gpio_set(UINT32 gpio, UINT32 level)
 {
-	struct pm8xxx_gpio_init pm8921_gpio[] = {
+	struct pm8xxx_gpio_init pm8921_gpio[] = 
+	{
 		PM8XXX_GPIO_OUTPUT(PM_GPIO(gpio), level),
 	};
 
-	pm8921_gpio_config(pm8921_gpio[0].gpio,
-		&(pm8921_gpio[0].config));
+	pm8921_gpio_config(pm8921_gpio[0].gpio,&(pm8921_gpio[0].config));
 
 	return;
 }
@@ -339,61 +305,4 @@ UINT32 pmic8921_gpio_get(UINT32 gpio)
 
 	return status;
 }
-
-#define PM8921_GPIO_OUTPUT_FUNC(_gpio, _val, _func) \
-	PM8XXX_GPIO_INIT(_gpio, PM_GPIO_DIR_OUT, 0, _val, \
-			PM_GPIO_PULL_NO, 2, \
-			PM_GPIO_STRENGTH_HIGH, \
-			_func, 0, 0)
-
-
-#define PM8921_GPIO_OUTPUT_BUFCONF(_gpio, _val, _strength, _bufconf) \
-	PM8XXX_GPIO_INIT(_gpio, PM_GPIO_DIR_OUT,\
-			PM_GPIO_OUT_BUF_##_bufconf, _val, \
-			PM_GPIO_PULL_NO, 2, \
-			PM_GPIO_STRENGTH_##_strength, \
-			PM_GPIO_FUNC_NORMAL, 0, 0)
-
-
-static struct pm8xxx_gpio_init pm8921_display_gpios_apq[] = {
-	/* Display GPIOs */
-	/* Bl: ON, PWM mode */
-	PM8921_GPIO_OUTPUT_FUNC(PM_GPIO(26), 1, PM_GPIO_FUNC_2),
-	/* LCD1_PWR_EN_N */
-	PM8921_GPIO_OUTPUT_BUFCONF(PM_GPIO(36), 0, LOW, OPEN_DRAIN),
-	/* DISP_RESET_N */
-	PM8921_GPIO_OUTPUT_BUFCONF(PM_GPIO(25), 1, LOW, CMOS),
-};
-
-void apq8064_display_gpio_init()
-{
-		int i = 0;
-		int num = 0;
-
-		num = ARRAY_SIZE(pm8921_display_gpios_apq);
-
-		for (i = 0; i < num; i++) {
-			pm8921_gpio_config(pm8921_display_gpios_apq[i].gpio,
-				&(pm8921_display_gpios_apq[i].config));
-		}
-}
-
-static struct pm8xxx_gpio_init mi_display_gpios_apq[] = 
-{
-	PM8XXX_GPIO_OUTPUT(PM_GPIO(11), 0),
-	PM8XXX_GPIO_OUTPUT(PM_GPIO(25), 0),
-	PM8XXX_GPIO_INPUT_POL(PM_GPIO(12), PM_GPIO_PULL_NO),
-};
-
-void mi_display_gpio_init()
-{
-	int i = 0;
-	int num = 0;
-
-	num = ARRAY_SIZE(mi_display_gpios_apq);
-
-	for (i = 0; i < num; i++) {
-		pm8921_gpio_config(mi_display_gpios_apq[i].gpio,
-			&(mi_display_gpios_apq[i].config));
-	}
-}
+*/

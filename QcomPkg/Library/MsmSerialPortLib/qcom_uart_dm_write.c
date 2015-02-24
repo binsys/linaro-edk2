@@ -93,7 +93,8 @@ unsigned int msm_boot_uart_dm_write(UINT32 base, char *data, unsigned int num_of
 	char *tx_data = NULL;
 	char new_data[1024];
 
-	if ((data == NULL) || (num_of_chars <= 0)) {
+	if ((data == NULL) || (num_of_chars <= 0)) 
+	{
 		return MSM_BOOT_UART_DM_E_INVAL;
 	}
 
@@ -111,8 +112,10 @@ unsigned int msm_boot_uart_dm_write(UINT32 base, char *data, unsigned int num_of
 
 	/* Check if transmit FIFO is empty.
 	 * If not we'll wait for TX_READY interrupt. */
-	if (!(readl(MSM_BOOT_UART_DM_SR(base)) & MSM_BOOT_UART_DM_SR_TXEMT)) {
-		while (!(readl(MSM_BOOT_UART_DM_ISR(base)) & MSM_BOOT_UART_DM_TX_READY)) {
+	if (!(readl(MSM_BOOT_UART_DM_SR(base)) & MSM_BOOT_UART_DM_SR_TXEMT)) 
+	{
+		while (!(readl(MSM_BOOT_UART_DM_ISR(base)) & MSM_BOOT_UART_DM_TX_READY)) 
+		{
 			udelay(1);
 			/* Kick watchdog? */
 		}
@@ -131,14 +134,16 @@ unsigned int msm_boot_uart_dm_write(UINT32 base, char *data, unsigned int num_of
 	    (num_of_chars / 4);
 	tx_char_left = num_of_chars;
 
-	for (i = 0; i < (int)tx_word_count; i++) {
+	for (i = 0; i < (int)tx_word_count; i++) 
+	{
 		tx_char = (tx_char_left < 4) ? tx_char_left : 4;
 		
 		
 		PACK_CHARS_INTO_WORDS(tx_data, tx_char, tx_word);
 
 		/* Wait till TX FIFO has space */
-		while (!(readl(MSM_BOOT_UART_DM_SR(base)) & MSM_BOOT_UART_DM_SR_TXRDY)) {
+		while (!(readl(MSM_BOOT_UART_DM_SR(base)) & MSM_BOOT_UART_DM_SR_TXRDY)) 
+		{
 			udelay(1);
 		}
 
@@ -151,10 +156,9 @@ unsigned int msm_boot_uart_dm_write(UINT32 base, char *data, unsigned int num_of
 	return MSM_BOOT_UART_DM_E_SUCCESS;
 }
 
-/* UART_DM uses four character word FIFO where as UART core
- * uses a character FIFO. so it's really inefficient to try
- * to write single character. But that's how dprintf has been
- * implemented.
+/* UART_DM uses four character word FIFO where as UART core uses a character FIFO. 
+ * so it's really inefficient to try to write single character. 
+ * But that's how dprintf has been implemented.
  */
 int uart_putc(int port, char c)
 {

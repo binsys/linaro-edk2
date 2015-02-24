@@ -119,9 +119,19 @@
 #define MDP_BASE                              (0x05100000)
 #define REG_MDP(off)                          (MDP_BASE + (off))
 
+#define MIPI_DSI_BASE                         (0x04700000)
+#define REG_DSI(off)                          (MIPI_DSI_BASE + (off))
+#define MIPI_DSI0_BASE              (MIPI_DSI_BASE)
+#define MIPI_DSI1_BASE              (MIPI_DSI_BASE)
+#define DSI0_PHY_BASE               MIPI_DSI_BASE
+#define DSI1_PHY_BASE               MIPI_DSI_BASE
+#define DSI0_PLL_BASE               MIPI_DSI_BASE
+#define DSI1_PLL_BASE               MIPI_DSI_BASE
+
 //TODO: Where does this go?
 #define MMSS_SFPB_GPREG                       (0x05700058)
 
 #define CE1_CRYPTO4_BASE                      (0x18500000)
 #define MSM_CRYPTO_BASE                       CE1_CRYPTO4_BASE
+#define LCDC_BASE               (0x000C0000)
 #endif

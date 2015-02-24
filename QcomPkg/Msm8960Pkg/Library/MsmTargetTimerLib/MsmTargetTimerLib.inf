@@ -27,7 +27,6 @@
 
 [Sources.common]
   MsmTargetTimerLib.c
-  platform_shared_timer.c
 
 [Packages]
   MdePkg/MdePkg.dec

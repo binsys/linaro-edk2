@@ -45,12 +45,12 @@
 
 
 /* Note:
- * This is a basic implementation of UART_DM protocol. More focus has been
- * given on simplicity than efficiency. Few of the things to be noted are:
- * - RX path may not be suitable for multi-threaded scenaraio because of the
- *   use of static variables. TX path shouldn't have any problem though. If
- *   multi-threaded support is required, a simple data-structure can
- *   be maintained for each thread.
+ * This is a basic implementation of UART_DM protocol. 
+ * More focus has been given on simplicity than efficiency. 
+ * Few of the things to be noted are:
+ * - RX path may not be suitable for multi-threaded scenaraio because of the use of static variables. 
+ *   TX path shouldn't have any problem though. 
+ *   If multi-threaded support is required, a simple data-structure can be maintained for each thread.
  * - Right now we are using polling method than interrupt based.
  * - We are using legacy UART protocol without Data Mover.
  * - Not all interrupts and error events are handled.
@@ -153,9 +153,6 @@ unsigned int msm_boot_uart_dm_init(UINT32 uart_dm_base)
 }
 
 
-
-
-
 /* Defining functions that's exposed to outside world and in coformance to
  * existing uart implemention. These functions are being called to initialize
  * UART and print debug messages in bootloader.
@@ -177,10 +174,8 @@ void uart_dm_init(UINT8 id, UINT32 gsbi_base, UINT32 uart_dm_base)
 	 * I2C on 2 ports, UART (without HS flow control) on the other 2.
 	 * This is only on chips that have GSBI block
 	 */
-	 if(gsbi_base)
-		writel(GSBI_PROTOCOL_CODE_I2C_UART <<
-			GSBI_CTRL_REG_PROTOCOL_CODE_S,
-			GSBI_CTRL_REG(gsbi_base));
+	if(gsbi_base)
+		writel(GSBI_PROTOCOL_CODE_I2C_UART <<GSBI_CTRL_REG_PROTOCOL_CODE_S,GSBI_CTRL_REG(gsbi_base));
 	ArmDataSyncronizationBarrier();
 
 	/* Configure clock selection register for tx and rx rates.

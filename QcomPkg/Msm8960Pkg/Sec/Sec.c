@@ -81,10 +81,10 @@ CEntryPoint(
 	/*
 	Memory Layout
 
-	0x80200000 ~ 0x80300000 Linux Atags(from lk)
-	0x80300000 ~ 0x80500000 Our .FD file(lk load .FD file to this address)
-	0x81500000 ~ 0x81500020 PcdCpuVectorBaseAddress + 32
-	0x81600000 ~ 0x81640000 PcdPrePiStackBase + PcdPrePiStackSize
+	0x80200000 ~ 0x80300000 1MB Linux Atags(from lk)  
+	0x80300000 ~ 0x80500000 2MB Our .FD file(lk load .FD file to this address)
+	0x81500000 ~ 0x81500020 1MB PcdCpuVectorBaseAddress + 32
+	0x81600000 ~ 0x81640000 1MB PcdPrePiStackBase + PcdPrePiStackSize
 	0x81700000 ~ 0x84600000 MemoryBegin(HobBase)
 	0x845c0000 ~ 0x84600000 StackBase + size
 
@@ -113,7 +113,7 @@ CEntryPoint(
 	InitCache ((UINT32)MemoryBase, (UINT32)MemorySize);
 
 
-	BuildResourceDescriptorHob(EFI_RESOURCE_MEMORY_MAPPED_IO, EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE, 0x00100000LL, 0x1D100000LL);
+	BuildResourceDescriptorHob(EFI_RESOURCE_MEMORY_MAPPED_IO, EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE, 0x00100000LL, 0x27f00000LL);
 	BuildResourceDescriptorHob(EFI_RESOURCE_MEMORY_MAPPED_IO, EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE, 0x28000000LL, 0x00B00000LL);
 	BuildResourceDescriptorHob(EFI_RESOURCE_MEMORY_MAPPED_IO, EFI_RESOURCE_ATTRIBUTE_INITIALIZED, 0x2A03F000LL, 0x00001000LL);
 
@@ -165,8 +165,11 @@ CEntryPoint(
 	BuildResourceDescriptorHob(EFI_RESOURCE_SYSTEM_MEMORY, EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE, 0x88f00000, 0x00100000);
 	BuildMemoryAllocationHob((EFI_PHYSICAL_ADDRESS)(UINTN)0x88f00000, 0x00100000, EfiBootServicesData);
 
+	//FB
+	BuildResourceDescriptorHob(EFI_RESOURCE_MEMORY_MAPPED_IO, EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE, 0x89000000LL, 0x00300000LL);
+	
 	// Free
-	BuildResourceDescriptorHob(EFI_RESOURCE_SYSTEM_MEMORY, attr0x3c07, 0x89000000, (UINT32)MemoryBase + (UINT32)MemorySize - 0x89000000);
+	BuildResourceDescriptorHob(EFI_RESOURCE_SYSTEM_MEMORY, attr0x3c07, 0x89300000, (UINT32)MemoryBase + (UINT32)MemorySize - 0x89300000);
 	//BuildMemoryAllocationHob((EFI_PHYSICAL_ADDRESS)(UINTN)0x89000000, (UINT32)MemoryBase + (UINT32)MemorySize - 0x89000000, EfiBootServicesData);
 
 	// Give the DXE Core access to our DEBUG and ASSERT infrastructure so this will work prior

@@ -15,13 +15,7 @@
 [Sources.common]
   qcom_msm8960_clock.c
   qcom_msm8960_clock_uart.c
-
-[LibraryClasses]
-  DebugLib
-  IoLib
-  ArmLib
-  MsmClock
-  MsmTargetPmicLib
+  qcom_msm8960_acpuclock.c
 
 [Packages]
   EmbeddedPkg/EmbeddedPkg.dec
@@ -29,6 +23,16 @@
   QcomPkg/QcomPkg.dec
   ArmPkg/ArmPkg.dec
   QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
+  
+[LibraryClasses]
+  DebugLib
+  IoLib
+  ArmLib
+  MsmClockLib
+  #MsmPM8921Lib
+  MsmTargetMmcLib
+
+
 
 [FixedPcd]
   #gOmap35xxTokenSpaceGuid.PcdOmap35xxConsoleUart

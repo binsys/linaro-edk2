@@ -1,0 +1,33 @@
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = MsmClockLib
+  FILE_GUID                      = 2ed69a2a-7ca1-45cd-84fb-58f149a50520
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = MsmClockLib
+
+#
+#  VALID_ARCHITECTURES           = ARM IA32 X64 IPF EBC
+#
+
+[Sources.common]
+  qcom_clock.c
+  qcom_clock_local.c
+  qcom_clock_pll.c
+
+[LibraryClasses]
+  DebugLib
+  IoLib
+  TimerLib
+  ArmLib
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdePkg/MdePkg.dec
+  
+  QcomPkg/QcomPkg.dec
+
+[FixedPcd]
+

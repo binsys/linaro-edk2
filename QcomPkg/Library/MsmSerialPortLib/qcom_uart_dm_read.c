@@ -52,20 +52,24 @@ unsigned int msm_boot_uart_dm_read(UINT32 base, unsigned int *data, int wait)
 	static int rx_last_snap_count = 0;
 	static int rx_chars_read_since_last_xfer = 0;
 
-	if (data == NULL) {
+	if (data == NULL) 
+	{
 		return MSM_BOOT_UART_DM_E_INVAL;
 	}
 
 	/* We will be polling RXRDY status bit */
-	while (!(readl(MSM_BOOT_UART_DM_SR(base)) & MSM_BOOT_UART_DM_SR_RXRDY)) {
+	while (!(readl(MSM_BOOT_UART_DM_SR(base)) & MSM_BOOT_UART_DM_SR_RXRDY)) 
+	{
 		/* if this is not a blocking call, we'll just return */
-		if (!wait) {
+		if (!wait) 
+		{
 			return MSM_BOOT_UART_DM_E_RX_NOT_READY;
 		}
 	}
 
 	/* Check for Overrun error. We'll just reset Error Status */
-	if (readl(MSM_BOOT_UART_DM_SR(base)) & MSM_BOOT_UART_DM_SR_UART_OVERRUN) {
+	if (readl(MSM_BOOT_UART_DM_SR(base)) & MSM_BOOT_UART_DM_SR_UART_OVERRUN) 
+	{
 		writel(MSM_BOOT_UART_DM_CMD_RESET_ERR_STAT, MSM_BOOT_UART_DM_CR(base));
 	}
 
@@ -82,16 +86,18 @@ unsigned int msm_boot_uart_dm_read(UINT32 base, unsigned int *data, int wait)
 	 */
 
 	/* If RX transfer has not ended yet */
-	if (rx_last_snap_count == 0) {
+	if (rx_last_snap_count == 0) 
+	{
 		/* Check if we've received stale event */
-		if (readl(MSM_BOOT_UART_DM_MISR(base)) & MSM_BOOT_UART_DM_RXSTALE) {
+		if (readl(MSM_BOOT_UART_DM_MISR(base)) & MSM_BOOT_UART_DM_RXSTALE) 
+		{
 			/* Send command to reset stale interrupt */
 			writel(MSM_BOOT_UART_DM_CMD_RES_STALE_INT, MSM_BOOT_UART_DM_CR(base));
 		}
 
 		/* Check if we haven't read more than DMRX value */
-		else if ((unsigned int)rx_chars_read_since_last_xfer <
-			readl(MSM_BOOT_UART_DM_DMRX(base))) {
+		else if ((unsigned int)rx_chars_read_since_last_xfer < readl(MSM_BOOT_UART_DM_DMRX(base))) 
+		{
 			/* We can still continue reading before initializing RX transfer */
 			return MSM_BOOT_UART_DM_E_SUCCESS;
 		}
@@ -110,7 +116,8 @@ unsigned int msm_boot_uart_dm_read(UINT32 base, unsigned int *data, int wait)
 
 	/* If there are still data left in FIFO we'll read them before
 	 * initializing RX Transfer again */
-	if ((rx_last_snap_count - rx_chars_read_since_last_xfer) >= 0) {
+	if ((rx_last_snap_count - rx_chars_read_since_last_xfer) >= 0) 
+	{
 		return MSM_BOOT_UART_DM_E_SUCCESS;
 	}
 
@@ -121,9 +128,8 @@ unsigned int msm_boot_uart_dm_read(UINT32 base, unsigned int *data, int wait)
 	return MSM_BOOT_UART_DM_E_SUCCESS;
 }
 
-/* UART_DM uses four character word FIFO whereas uart_getc
- * is supposed to read only one character. So we need to
- * read a word and keep track of each character in the word.
+/* UART_DM uses four character word FIFO whereas uart_getc is supposed to read only one character. 
+ * So we need to read a word and keep track of each character in the word.
  */
 int uart_getc(int port, int wait)
 {
@@ -135,7 +141,8 @@ int uart_getc(int port, int wait)
 	{
 		/* Read from FIFO only if it's a first read or all the four
 		 * characters out of a word have been read */
-		if (msm_boot_uart_dm_read(uart_base, &word, wait) != MSM_BOOT_UART_DM_E_SUCCESS) {
+		if (msm_boot_uart_dm_read(uart_base, &word, wait) != MSM_BOOT_UART_DM_E_SUCCESS) 
+		{
 			return -1;
 		}
 	}

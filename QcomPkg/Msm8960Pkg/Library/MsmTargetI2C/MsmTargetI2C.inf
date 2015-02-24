@@ -1,0 +1,35 @@
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = MsmTargetI2C
+  FILE_GUID                      = b1acb1b1-032d-4f23-8716-605ad10d1f0a
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = MsmTargetI2C
+
+
+#
+#  VALID_ARCHITECTURES           = ARM IA32 X64 IPF EBC
+#
+
+[Sources.common]
+  qcom_msm8960_i2c_qup.c
+
+[LibraryClasses]
+  DebugLib
+  IoLib
+  ArmLib
+  
+  MsmClockLib
+  
+  #MsmPM8921Lib
+
+[Packages]
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdePkg/MdePkg.dec
+  ArmPkg/ArmPkg.dec
+  QcomPkg/QcomPkg.dec
+  QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
+
+[FixedPcd]
+

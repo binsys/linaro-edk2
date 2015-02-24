@@ -20,8 +20,8 @@
   DebugLib
   IoLib
   ArmLib
-  MsmClock
-  MsmTargetPmicLib
+  MsmClockLib
+  #MsmPM8921Lib
 
 [Packages]
   EmbeddedPkg/EmbeddedPkg.dec

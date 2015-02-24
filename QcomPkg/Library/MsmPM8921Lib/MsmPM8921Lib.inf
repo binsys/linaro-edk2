@@ -1,0 +1,31 @@
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = MsmPM8921Lib
+  FILE_GUID                      = c36acab6-1e38-4533-a3d5-8b04eca53583
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = MsmPM8921Lib
+
+
+#
+#  VALID_ARCHITECTURES           = ARM IA32 X64 IPF EBC
+#
+
+[Sources.common]
+  qcom_pm8921.c
+  qcom_pm8921_pwm.c
+
+[LibraryClasses]
+  DebugLib
+  IoLib
+  ArmLib
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdePkg/MdePkg.dec
+  
+  QcomPkg/QcomPkg.dec
+  
+[FixedPcd]

@@ -1,0 +1,31 @@
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = MsmSSBILib
+  FILE_GUID                      = 8444a876-86dc-4ca4-add0-d13416073457
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = MsmSSBILib
+
+
+#
+#  VALID_ARCHITECTURES           = ARM IA32 X64 IPF EBC
+#
+
+[Sources.common]
+  MsmSSBILib.c
+
+[LibraryClasses]
+  DebugLib
+  IoLib
+  ArmLib
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdePkg/MdePkg.dec
+  
+  QcomPkg/QcomPkg.dec
+
+[FixedPcd]
+

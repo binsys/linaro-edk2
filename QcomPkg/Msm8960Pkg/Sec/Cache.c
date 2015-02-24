@@ -48,10 +48,10 @@ InitCache(
 	//MSM_IOMAP
 	MemoryTable[Index].PhysicalBase   = 0x00100000;
 	MemoryTable[Index].VirtualBase    = 0x00100000;
-	MemoryTable[Index].Length         = 0x1D100000;
+	MemoryTable[Index].Length         = 0x27f00000;
 	MemoryTable[Index].Attributes     = ARM_MEMORY_REGION_ATTRIBUTE_DEVICE;
 
-	//unknow
+	//LPASS LPASS_CSR_BASE
 	MemoryTable[++Index].PhysicalBase = 0x28000000;
 	MemoryTable[Index].VirtualBase    = 0x28000000;
 	MemoryTable[Index].Length         = 0x00B00000;
@@ -63,7 +63,7 @@ InitCache(
 	MemoryTable[Index].Length         = 0x00100000;   //0x00001000 true size
 	MemoryTable[Index].Attributes     = ARM_MEMORY_REGION_ATTRIBUTE_UNCACHED_UNBUFFERED;
 
-	//
+	//0x2E000000 ~ 0x2A030000              SBL2
 	MemoryTable[++Index].PhysicalBase = 0x2e000000;
 	MemoryTable[Index].VirtualBase    = 0x2e000000;
 	MemoryTable[Index].Length         = 0x00100000;   //0x00001000
@@ -123,10 +123,18 @@ InitCache(
 	MemoryTable[Index].Length         = 0x00100000;
 	MemoryTable[Index].Attributes     = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_THROUGH;
 
-	//Free 
+	//FB 
 	MemoryTable[++Index].PhysicalBase = 0x89000000;
 	MemoryTable[Index].VirtualBase    = 0x89000000;
-	MemoryTable[Index].Length         = MemoryBase + MemoryLength - 0x89000000;
+	MemoryTable[Index].Length         = 0x00300000;
+	MemoryTable[Index].Attributes     = ARM_MEMORY_REGION_ATTRIBUTE_DEVICE;
+	
+	//0x8ff00000 ~ 0x90000000 0x00100000   SBL3
+	
+	//Free 
+	MemoryTable[++Index].PhysicalBase = 0x89300000;
+	MemoryTable[Index].VirtualBase    = 0x89300000;
+	MemoryTable[Index].Length         = MemoryBase + MemoryLength - 0x89300000;
 	MemoryTable[Index].Attributes     = (ARM_MEMORY_REGION_ATTRIBUTES)CacheAttributes;
 
 	// End of Table
