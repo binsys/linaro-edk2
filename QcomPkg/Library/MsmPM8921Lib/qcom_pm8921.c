@@ -38,7 +38,7 @@
 
 #include <Library/qcom_pm8921.h>
 #include <Library/qcom_pm8921_hw.h>
-
+#include <Library/qcom_pm8921_rtc.h>
 
 
 extern int pm8921_pwm_config(UINT8 pwm_id,UINT32 duty_us,UINT32 period_us,pm8921_dev_t *dev);
@@ -69,6 +69,7 @@ void pm8921_init(pm8921_dev_t *pmic)
 
 	dev = pmic;
 	dev->initialized = 1;
+	pm8921_rtc_init(dev);
 }
 
 int pm8921_masked_write(UINT16 addr,UINT8 mask, UINT8 val)
@@ -542,25 +543,4 @@ int pm8921_mpp_set_digital_output(UINT8 mpp_id)
 	return ret;
 }
 
-int pm8921_rtc_alarm_disable(void)
-{
-	int rc;
-	UINT8 reg;
 
-	rc = dev->read(&reg, 1, PM8921_RTC_CTRL);
-	if (rc) 
-	{
-		DEBUG((EFI_D_WARN,"Failed to read RTC_CTRL reg = %d\n",rc));
-		return rc;
-	}
-	reg = (reg & ~PM8921_RTC_ALARM_ENABLE);
-
-	rc = dev->write(&reg, 1, PM8921_RTC_CTRL);
-	if (rc) 
-	{
-		DEBUG((EFI_D_WARN,"Failed to write RTC_CTRL reg = %d\n",rc));
-		return rc;
-	}
-
-	return rc;
-}

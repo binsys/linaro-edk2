@@ -143,7 +143,7 @@ VideoCopyHorizontalOverlap(
 			SourcePixelY++, DestinationPixel8bit += Width * BytesPerPixel)
 		{
 			// Calculate the source address:
-			SourcePixel8bit = (UINT8 *)(FrameBufferBase + SourcePixelY * HorizontalResolution * BytesPerPixel + SourceX * BytesPerPixel);
+			SourcePixel8bit = (UINT8 *)(FrameBufferBase + (SourcePixelY * HorizontalResolution * BytesPerPixel + SourceX * BytesPerPixel));
 
 			// Copy the entire line Y from Video to the temp buffer
 			CopyMem((VOID *)DestinationPixel8bit, (CONST VOID *)SourcePixel8bit, Width * BytesPerPixel);
@@ -512,8 +512,8 @@ LcdGraphicsBlt(
 	HorizontalResolution = This->Mode->Info->HorizontalResolution;
 	VerticalResolution = This->Mode->Info->VerticalResolution;
 
-	DEBUG((DEBUG_INFO, "LcdGraphicsBlt (BltOperation:%d,DestX:%d,DestY:%d,Width:%d,Height:%d) res(%d,%d)\n",
-		BltOperation, DestinationX, DestinationY, Width, Height, HorizontalResolution, VerticalResolution));
+	//DEBUG((DEBUG_INFO, "LcdGraphicsBlt (BltOperation:%d,DestX:%d,DestY:%d,Width:%d,Height:%d) res(%d,%d)\n",
+	//	BltOperation, DestinationX, DestinationY, Width, Height, HorizontalResolution, VerticalResolution));
 
 	// Check we have reasonable parameters
 	if (Width == 0 || Height == 0)

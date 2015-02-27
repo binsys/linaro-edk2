@@ -20,12 +20,25 @@
 
 #include <Guid/GlobalVariable.h>
 
+#include <Protocol/EdidDiscovered.h>
+#include <Protocol/EdidActive.h>
+
 #include "LcdGraphicsOutputDxe.h"
 
 
 
 
 BOOLEAN mDisplayInitialized = FALSE;
+
+EFI_EDID_DISCOVERED_PROTOCOL  mEdidDiscovered = {
+  0,
+  NULL
+};
+
+EFI_EDID_ACTIVE_PROTOCOL      mEdidActive = {
+  0,
+  NULL
+};
 
 
 /***************************************
@@ -307,10 +320,25 @@ InitializeDisplay(
 	Status = LcdPlatformGetVram(&VramBaseAddress, &VramSize);
 	if (EFI_ERROR(Status))
 	{
+		DEBUG((EFI_D_WARN,  "LcdPlatformGetVram failed!\n"));
 		return Status;
 	}
+	
 
 
+	 // Install the EDID Protocols
+	Status = gBS->InstallMultipleProtocolInterfaces(
+		&Instance->Handle,
+		&gEfiEdidDiscoveredProtocolGuid,  &mEdidDiscovered,
+		&gEfiEdidActiveProtocolGuid,      &mEdidActive,
+		NULL
+	);
+	
+	if (EFI_ERROR(Status))
+	{
+		DEBUG((EFI_D_WARN,  "InstallMultipleProtocolInterfaces gEfiEdidDiscoveredProtocolGuid gEfiEdidActiveProtocolGuid failed!\n"));
+		//goto EXIT_ERROR_LCD_SHUTDOWN;
+	}
 	
 	{
 		msm_clocks_init();

@@ -11,18 +11,19 @@
 
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = MsmTargetRealTimeClockLib
+  BASE_NAME                      = MsmPM8921RealTimeClockLib
   FILE_GUID                      = F7953379-65FB-4A58-9D72-7C64633F3F40
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
   LIBRARY_CLASS                  = RealTimeClockLib
 
 [Sources.common]
-  MsmTargetRealTimeClockLib.c
+  MsmPM8921RealTimeClockLib.c
 
 [Packages]
   MdePkg/MdePkg.dec
   EmbeddedPkg/EmbeddedPkg.dec
+  QcomPkg/QcomPkg.dec
 
 [LibraryClasses]
   IoLib
@@ -31,7 +32,7 @@
   PcdLib
 
 [Protocols]
-  #gEmbeddedExternalDeviceProtocolGuid
+  gQcomPM8921ProtocolGuid
 
 [depex]
-  #gEmbeddedExternalDeviceProtocolGuid
+  gQcomPM8921ProtocolGuid

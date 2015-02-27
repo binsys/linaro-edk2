@@ -35,7 +35,7 @@ _ModuleEntryPoint
   mrc     p15, 0, r0, c1, c0, 0
   bic     r0, r0, #0x00002300     /* clear bits 13, 9:8 (--V- --RS) */
   bic     r0, r0, #0x00000005     /* clear bits 0, 2 (---- -C-M) */
-  orr     r0, r0, #0x00000002     /* set bit 1 (A) Align */
+  //orr     r0, r0, #0x00000002     /* set bit 1 (A) Align */
   orr     r0, r0, #0x00001000     /* set bit 12 (I) enable I-Cache */
   mcr     p15, 0, r0, c1, c0, 0
 

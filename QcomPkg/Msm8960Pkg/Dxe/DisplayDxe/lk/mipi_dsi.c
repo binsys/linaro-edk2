@@ -132,7 +132,7 @@ int dsi_cmd_dma_trigger_for_panel()
 
 	writel((readl(DSI_INT_CTRL) | 0x01000001), DSI_INT_CTRL);
 	dsb();
-	DEBUG((EFI_D_WARN, "Panel CMD: command mode dma tested successfully\n"));
+	//DEBUG((EFI_D_WARN, "Panel CMD: command mode dma tested successfully\n"));
 	return status;
 }
 
@@ -215,8 +215,7 @@ int mipi_dsi_cmds_tx(struct mipi_dsi_cmd *cmds, int count)
 	if (off)
 		off = 8 - off;
 	off += (UINT32)(&pload[0]);
-	DEBUG((EFI_D_WARN, "off=%x\n",off));
-	
+
 	cm = cmds;
 	for (i = 0; i < count; i++) {
 		CopyMem((void *)off, (cm->payload), cm->size);
@@ -1179,7 +1178,7 @@ int mipi_dsi_on()
 		}
 	}
 
-	DEBUG((EFI_D_WARN, "Video lane tested successfully\n"));
+	//DEBUG((EFI_D_WARN, "Video lane tested successfully\n"));
 	return ret;
 }
 

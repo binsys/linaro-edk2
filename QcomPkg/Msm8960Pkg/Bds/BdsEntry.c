@@ -29,7 +29,6 @@ EFI_BDS_ARCH_PROTOCOL  gBdsProtocol = {
 
 
 
-
 /**
   This function uses policy data from the platform to determine what operating
   system or system utility should be loaded and invoked.  This function call
@@ -85,6 +84,40 @@ BdsEntry (
 
   UnicodeSPrint (gST->FirmwareVendor, Size, L"Qcom Msm8960 XiaoMi 2A EFI %a %a", __DATE__, __TIME__);
 
+   //
+  // Fixup Table CRC after we updated Firmware Vendor
+  //
+  gST->Hdr.CRC32 = 0;
+  Status = gBS->CalculateCrc32 ((VOID*)gST, gST->Hdr.HeaderSize, &gST->Hdr.CRC32);
+  ASSERT_EFI_ERROR (Status);
+
+  //
+  //Perform Connect
+  //
+  HandleCount = 0;
+  while (1) 
+  {
+    OldHandleCount = HandleCount;
+    Status = gBS->LocateHandleBuffer (
+                    AllHandles,
+                    NULL,
+                    NULL,
+                    &HandleCount,
+                    &HandleBuffer
+                    );
+    if (EFI_ERROR (Status)) {
+      break;
+    }
+
+    if (HandleCount == OldHandleCount) {
+      break;
+    }
+
+    for (Index = 0; Index < HandleCount; Index++) {
+      gBS->ConnectController (HandleBuffer[Index], NULL, NULL, TRUE);
+    }
+  }
+  
   //
   // Now we need to setup the EFI System Table with information about the console devices.
   // This code is normally in the console spliter driver on platforms that support multiple
@@ -131,33 +164,6 @@ BdsEntry (
   // prior to this point as they were configured to use a more primative output scheme.
   //
 
-  //
-  //Perform Connect
-  //
-  HandleCount = 0;
-  while (1) 
-  {
-    OldHandleCount = HandleCount;
-    Status = gBS->LocateHandleBuffer (
-                    AllHandles,
-                    NULL,
-                    NULL,
-                    &HandleCount,
-                    &HandleBuffer
-                    );
-    if (EFI_ERROR (Status)) {
-      break;
-    }
-
-    if (HandleCount == OldHandleCount) {
-      break;
-    }
-
-    for (Index = 0; Index < HandleCount; Index++) {
-      gBS->ConnectController (HandleBuffer[Index], NULL, NULL, TRUE);
-    }
-  }
-
   EfiSignalEventReadyToBoot ();
 
   //Locate handles for SimpleFileSystem protocol
@@ -196,7 +202,15 @@ BdsEntry (
       }
     }
   }
+  else
+  {
+    DEBUG((EFI_D_ERROR, "LocateHandleBuffer gEfiSimpleFileSystemProtocolGuid failed. Status: %r\n", Status));
+  }
 
+
+  DEBUG((EFI_D_INFO, "Try find Ebl from all FVs... \n"));
+  
+  
   //
   // Normal UEFI behavior is to process Globally Defined Variables as defined in Chapter 3
   // (Boot Manager) of the UEFI specification. For this embedded system we don't do this.
@@ -215,16 +229,56 @@ BdsEntry (
     if (EFI_ERROR(Status)) {
       DEBUG((EFI_D_ERROR, "Boot from Shell failed. Status: %r\n", Status));
     }
+    else
+    {
+      DEBUG((EFI_D_INFO, "Load Ebl successed. you SHOULD NOT see this message.Status: %r\n", Status));
+    }
+  }
+  else
+  {
+    DEBUG((EFI_D_ERROR, "Find Ebl failed. Status: %r\n", Status));
   }
   
   
-  gST->ConOut->OutputString (gST->ConOut, L"ASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDF\n\r");
+  
+  if(gConsolePresent)
+  {
+    //http://wiki.phoenix.com/wiki/index.php/EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL#Members
+    //http://wiki.phoenix.com/wiki/index.php/SIMPLE_TEXT_OUTPUT_MODE
+    
+    //Print(L"",L"");
+    //AsciiPrint("","a");
+    
+    Print(L"FirmwareVendor:%s\r\n",gST->FirmwareVendor);
+    
+    gST->ConOut->OutputString (gST->ConOut, L"AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEEEEEEEFFFFFFFFFFGGGGGGGGGGHHHHHHHHHHIIIIIIIIIIJJJJJJJJJJ\n\r");
+    gST->ConOut->OutputString (gST->ConOut, L"ÄãºÃ\n\r");
+    
+    
+    gST->ConOut->ClearScreen(gST->ConOut);
+
+    //Print(L"ROW=%d,COL=%d\n",gST->ConOut->Mode->CursorRow,gST->ConOut->Mode->CursorColumn);
+    {
+      INT32 i = 0;
+      for(i = 0;i<60;i++)
+      {
+        Print(L"line=%d\n",i);
+      }
+    }
+  }
+  
+  
 
   //
   // EFI does not define the behaviour if all boot attemps fail and the last one returns.
   // So we make a policy choice to reset the system since this BDS does not have a UI.
   //
-  gRT->ResetSystem (EfiResetShutdown, Status, 0, NULL);
+  // gRT->ResetSystem (EfiResetShutdown, Status, 0, NULL);
+  
+  DEBUG((EFI_D_ERROR, "Bds failed. Hang....\n"));
+  
+  CpuDeadLoop ();
+
 
   return ;
 }

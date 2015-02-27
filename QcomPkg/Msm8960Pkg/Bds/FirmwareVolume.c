@@ -136,13 +136,38 @@ LoadPeCoffSectionFromFv (
   EFI_STATUS                    Status;
   EFI_DEVICE_PATH_PROTOCOL      *DevicePath;
   EFI_HANDLE                    ImageHandle;
-
+  EFI_LOADED_IMAGE_PROTOCOL*   LoadedImage;
+  UINTN                        LoadOptionsSize;
+  VOID*                       LoadOptions;
+  
+  
+  LoadOptionsSize = 0;
+  LoadOptions = NULL;
+  
+  LoadOptions = L"DEBUG BOOTDEBUG DEBUGPORT=COM3 BAUDRATE=115200 DISABLE_INTEGRITY_CHECKS TESTSIGNING";
+  LoadOptionsSize = StrLen(LoadOptions) * sizeof(CHAR16);
+  
+  
   DevicePath = FvFileDevicePath (FvHandle, NameGuid);
 
   Status = gBS->LoadImage (TRUE, gImageHandle, DevicePath, NULL, 0, &ImageHandle);
   if (!EFI_ERROR (Status)) {
+  
+    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **) &LoadedImage);
+    if (EFI_ERROR (Status)) {
+      DEBUG ((DEBUG_ERROR, "Bds:LoadPeCoffSectionFromFv get gEfiLoadedImageProtocolGuid failed!\n"));
+      return Status;
+    }
+    
+    LoadedImage->LoadOptionsSize  = LoadOptionsSize;
+    LoadedImage->LoadOptions      = LoadOptions;
+    
     PERF_END (NULL, "BDS", NULL, 0);
     Status = gBS->StartImage (ImageHandle, NULL, NULL);
+  }
+  else
+  {
+    DEBUG ((DEBUG_ERROR, "Bds:LoadPeCoffSectionFromFv LoadImage failed!\n"));
   }
 
   return Status;

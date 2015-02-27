@@ -131,6 +131,22 @@ EFI_STATUS EFIAPI j_pm8921_pwm_config(
 }
 
 
+EFI_STATUS EFIAPI j_pm8xxx_rtc_read_time(
+	IN QCOM_PM8921_PROTOCOL   *This,
+	OUT UINT32* secs
+)
+{
+	return pm8xxx_rtc_read_time(secs) == 0 ? EFI_SUCCESS : EFI_DEVICE_ERROR;
+}
+
+EFI_STATUS EFIAPI j_pm8xxx_rtc_set_time(
+	IN QCOM_PM8921_PROTOCOL   *This,
+	IN UINT32 secs
+)
+{
+	return pm8xxx_rtc_set_time(secs) == 0 ? EFI_SUCCESS : EFI_DEVICE_ERROR;
+}
+
 
 QCOM_PM8921_PROTOCOL gPM8921 =
 {
@@ -146,7 +162,9 @@ QCOM_PM8921_PROTOCOL gPM8921 =
 	j_pm8921_mpp_set_digital_output,
 	j_pm8921_rtc_alarm_disable,
 	j_pm8921_pwm_enable,
-	j_pm8921_pwm_config
+	j_pm8921_pwm_config,
+	j_pm8xxx_rtc_read_time,
+	j_pm8xxx_rtc_set_time
 };
 
 

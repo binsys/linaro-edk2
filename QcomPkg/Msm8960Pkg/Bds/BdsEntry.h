@@ -41,6 +41,7 @@
 #include <Protocol/DevicePath.h>
 #include <Protocol/SimpleFileSystem.h>
 #include <Protocol/UsbIo.h>
+#include <Protocol/LoadedImage.h>
 
 
 EFI_STATUS

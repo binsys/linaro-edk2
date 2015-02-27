@@ -17,8 +17,7 @@
   MdePkg/MdePkg.dec
   
   QcomPkg/QcomPkg.dec
-  
-  #QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
+
 
 [LibraryClasses]
   BaseLib

@@ -19,9 +19,9 @@
 
 [Packages]
   EmbeddedPkg/EmbeddedPkg.dec
+  ArmPkg/ArmPkg.dec
   MdePkg/MdePkg.dec
   QcomPkg/QcomPkg.dec
-  ArmPkg/ArmPkg.dec
   QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
   
 [LibraryClasses]

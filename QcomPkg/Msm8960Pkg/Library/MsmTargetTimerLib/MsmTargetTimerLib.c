@@ -60,8 +60,11 @@
 //ref 
 // clock is 32768Hz = 33k
 // 1ms = 33 ticks
-// 1ns = 0.033 ticks
+// 1us = 0.033 ticks
+// 1ns = 0.000033 ticks
 //∫¡√Î—” ±
+//     1000us        30us
+//     33 ticks      1 ticks
 void mdelay(unsigned msecs)
 {
 	msecs *= 33;
@@ -100,7 +103,7 @@ TimerConstructor (
   VOID
   )
 {
-	//DEBUG ((EFI_D_ERROR, "TimerLib:TimerConstructor need re-mpl!!!\n"));
+	DEBUG ((EFI_D_ERROR, "TimerLib:TimerConstructor\n"));
 	return EFI_SUCCESS;
 }
 
@@ -111,8 +114,9 @@ MicroSecondDelay (
   IN  UINTN MicroSeconds
   )
 {
-	DEBUG ((EFI_D_ERROR, "TimerLib:MicroSecondDelay need re-mpl!!!\n"));
+	DEBUG ((EFI_D_ERROR, "TimerLib:MicroSecondDelay MicroSeconds=%d start\n",MicroSeconds));
 	mdelay((UINT32)MicroSeconds);
+	DEBUG ((EFI_D_ERROR, "TimerLib:MicroSecondDelay MicroSeconds=%d end\n",MicroSeconds));
 	return MicroSeconds;
 }
 
@@ -123,8 +127,9 @@ NanoSecondDelay (
   IN  UINTN NanoSeconds
   )
 {
-	DEBUG ((EFI_D_ERROR, "TimerLib:NanoSecondDelay need re-mpl!!!\n"));
+	DEBUG ((EFI_D_ERROR, "TimerLib:NanoSecondDelay NanoSeconds=%d,use udelay start\n",NanoSeconds));
 	udelay((UINT32)NanoSeconds);
+	DEBUG ((EFI_D_ERROR, "TimerLib:NanoSecondDelay NanoSeconds=%d,use udelay end\n",NanoSeconds));
 	return NanoSeconds;
 }
 

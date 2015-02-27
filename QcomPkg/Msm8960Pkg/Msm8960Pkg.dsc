@@ -58,14 +58,13 @@
   MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
   MsmClockLib                      |    QcomPkg/Library/MsmClockLib/MsmClockLib.inf
   MsmSSBILib                       |    QcomPkg/Library/MsmSSBILib/MsmSSBILib.inf
-  
+  RealTimeClockLib                 |    QcomPkg/Library/MsmPM8921RealTimeClockLib/MsmPM8921RealTimeClockLib.inf
   
   
   TimerLib                         |    QcomPkg/Msm8960Pkg/Library/MsmTargetTimerLib/MsmTargetTimerLib.inf
   MsmTargetLib                     |    QcomPkg/Msm8960Pkg/Library/MsmTargetLib/MsmTargetLib.inf
   MsmTargetGpioLib                 |    QcomPkg/Msm8960Pkg/Library/MsmTargetGpioLib/MsmTargetGpioLib.inf
   EfiResetSystemLib                |    QcomPkg/Msm8960Pkg/Library/MsmTargetResetSystemLib/MsmTargetResetSystemLib.inf
-  RealTimeClockLib                 |    QcomPkg/Msm8960Pkg/Library/MsmTargetRealTimeClockLib/MsmTargetRealTimeClockLib.inf
   MsmTargetClockLib                |    QcomPkg/Msm8960Pkg/Library/MsmTargetClockLib/MsmTargetClockLib.inf
   MsmTargetMmcLib                  |    QcomPkg/Msm8960Pkg/Library/MsmTargetMmcLib/MsmTargetMmcLib.inf
   MsmTargetI2C                     |    QcomPkg/Msm8960Pkg/Library/MsmTargetI2C/MsmTargetI2C.inf
@@ -293,6 +292,8 @@
   # about 10ms
   gEmbeddedTokenSpaceGuid.PcdTimerPeriod                       |100000
   
+  gEmbeddedTokenSpaceGuid.PcdMetronomeTickPeriod               |10
+  
   #1 ticks about 148ns
   gEmbeddedTokenSpaceGuid.PcdEmbeddedPerformanceCounterPeriodInNanoseconds  |148
 
@@ -309,13 +310,12 @@
 [Components.common]
 
   #
-  # SEC
+  # SEC (SEC)
   #
   QcomPkg/Msm8960Pkg/Sec/Sec.inf
   
-  
   #
-  # DXE
+  # DXE (DXE_CORE)
   #
   MdeModulePkg/Core/Dxe/DxeMain.inf{
     <LibraryClasses>
@@ -325,45 +325,72 @@
       NULL|EmbeddedPkg/Library/LzmaHobCustomDecompressLib/LzmaHobCustomDecompressLib.inf
   }
   
-  # Needed
+  # (DXE_DRIVER)
   MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
   
+  #(DXE_DRIVER)
   ArmPkg/Drivers/CpuDxe/CpuDxe.inf
   
+  #(DXE_DRIVER)
   EmbeddedPkg/MetronomeDxe/MetronomeDxe.inf
   
+  #(DXE_DRIVER)
   ArmPkg/Drivers/ArmGic/ArmGicDxe.inf{
     <LibraryClasses>
       ArmGicLib|ArmPkg/Drivers/ArmGic/ArmGicLib.inf
   }
   
+  #(DXE_DRIVER)
   QcomPkg/Msm8960Pkg/Dxe/TimerDxe/TimerDxe.inf
   
+  #(DXE_DRIVER)
   QcomPkg/Dxe/PM8921Dxe/PM8921Dxe.inf
   
+  #(DXE_DRIVER)
   QcomPkg/Msm8960Pkg/Dxe/DisplayDxe/DisplayDxe.inf
   
-  MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
-  MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
-  MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf  
-  MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf 
- 
-  MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
-  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
+  #(DXE_DRIVER)
   QcomPkg/Msm8960Pkg/Bds/Bds.inf
-  #ArmPlatformPkg/Bds/Bds.inf
   
+  #(DXE_DRIVER)
+  MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
+  
+  #(DXE_DRIVER)
+  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
+  
+
+  
+  #(DXE_DRIVER)
   MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
   #     dept gEfiTimerArchProtocolGuid
 
+  #(DXE_RUNTIME_DRIVER)
   MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
   
+  #(DXE_RUNTIME_DRIVER)
   MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
   
-  
+  #(DXE_RUNTIME_DRIVER)
   MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
 
+  #(DXE_RUNTIME_DRIVER)
   EmbeddedPkg/EmbeddedMonotonicCounter/EmbeddedMonotonicCounter.inf
+  
+  #(DXE_RUNTIME_DRIVER)
   EmbeddedPkg/ResetRuntimeDxe/ResetRuntimeDxe.inf
+  
+  #(DXE_RUNTIME_DRIVER)
   EmbeddedPkg/RealTimeClockRuntimeDxe/RealTimeClockRuntimeDxe.inf
+  
+  #(UEFI_DRIVER)
+  MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
+  
+  #(UEFI_DRIVER)
+  MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
+  
+  #(UEFI_DRIVER)
+  MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
+  
+  #(UEFI_DRIVER)
+  MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf 
  

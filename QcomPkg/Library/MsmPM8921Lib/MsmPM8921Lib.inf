@@ -15,6 +15,7 @@
 [Sources.common]
   qcom_pm8921.c
   qcom_pm8921_pwm.c
+  qcom_pm8921_rtc.c
 
 [LibraryClasses]
   DebugLib

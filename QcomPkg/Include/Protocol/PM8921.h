@@ -8,7 +8,7 @@
 #include <Library/qcom_pm8921.h>
 #include <Library/qcom_pm8921_hw.h>
 #include <Library/qcom_pm8921_pwm.h>
-
+#include <Library/qcom_pm8921_rtc.h>
 //
 // Protocol GUID
 //
@@ -132,6 +132,20 @@ EFI_STATUS
 );
 
 
+typedef
+EFI_STATUS
+(EFIAPI *PM8XXX_RTC_READ_TIME)(
+	IN QCOM_PM8921_PROTOCOL   *This,
+	OUT UINT32* secs
+);
+
+
+typedef
+EFI_STATUS
+(EFIAPI *PM8XXX_RTC_SET_TIME)(
+	IN QCOM_PM8921_PROTOCOL   *This,
+	IN UINT32 secs
+);
 
 
 struct _QCOM_PM8921_PROTOCOL
@@ -149,6 +163,8 @@ struct _QCOM_PM8921_PROTOCOL
 	PM8921_RTC_ALARM_DISABLE            pm8921_rtc_alarm_disable;
 	PM8921_PWM_ENABLE                   pm8921_pwm_enable;
 	PM8921_PWM_CONFIG                   pm8921_pwm_config;
+	PM8XXX_RTC_READ_TIME                pm8xxx_rtc_read_time;
+	PM8XXX_RTC_SET_TIME                 pm8xxx_rtc_set_time;
 };
 
 

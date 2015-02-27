@@ -64,15 +64,6 @@ LCD_RESOLUTION mResolutions[] = {
   }
 };
 
-EFI_EDID_DISCOVERED_PROTOCOL  mEdidDiscovered = {
-  0,
-  NULL
-};
-
-EFI_EDID_ACTIVE_PROTOCOL      mEdidActive = {
-  0,
-  NULL
-};
 
 
 EFI_STATUS
@@ -189,10 +180,10 @@ LcdShutdown (
   VOID
   )
 {
-  DEBUG((EFI_D_ERROR,"DisplayDxe:LcdShutdown!\n"));
-  		if (display_enable) 
-		{
-			msm_display_off();
-		}
+	DEBUG((EFI_D_ERROR,"DisplayDxe:LcdShutdown!\n"));
+	if (display_enable) 
+	{
+		msm_display_off();
+	}
 }
 
