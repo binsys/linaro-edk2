@@ -353,6 +353,9 @@
   QcomPkg/Msm8960Pkg/Bds/Bds.inf
   
   #(DXE_DRIVER)
+  QcomPkg/Msm8960Pkg/Dxe/MMCHSDxe/MMCHS.inf
+  
+  #(DXE_DRIVER)
   MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
   
   #(DXE_DRIVER)
@@ -393,4 +396,18 @@
   
   #(UEFI_DRIVER)
   MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf 
+  
+  
+  #(UEFI_DRIVER)
+  MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
+  
+  #(UEFI_DRIVER)
+  MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
+  
+  #(UEFI_DRIVER)
+  MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
+  
+  #(UEFI_DRIVER)
+  FatBinPkg/EnhancedFatDxe/Fat.inf
+  
  

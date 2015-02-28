@@ -1,0 +1,68 @@
+#/** @file
+#
+#  Copyright (c) 2008 - 2010, Apple Inc. All rights reserved.<BR>
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution.  The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+#**/
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = MMCHS
+  FILE_GUID                      = A9AE7F06-35A1-40AF-A894-7CF3BA488B2C
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+
+  ENTRY_POINT                    = MMCHSInitialize
+
+
+[Sources.common]
+  MMCHS.c
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  
+  QcomPkg/QcomPkg.dec
+  
+  QcomPkg/Msm8960Pkg/Msm8960Pkg.dec
+[LibraryClasses]
+  PcdLib
+  UefiLib
+  UefiDriverEntryPoint
+  MemoryAllocationLib
+  BaseMemoryLib
+  IoLib
+  ArmLib
+  BaseLib
+  DebugLib
+  UefiBootServicesTableLib
+
+  MsmTargetClockLib
+  MsmTargetGpioLib
+  MsmTargetLib
+  MsmTargetMmcLib
+  MsmTargetI2C
+  
+  TimerLib
+
+[Guids]
+
+[Protocols]
+  gEfiBlockIoProtocolGuid
+  gEfiCpuArchProtocolGuid
+  gEfiDevicePathProtocolGuid
+
+[Pcd]
+
+
+[depex]
+ TRUE

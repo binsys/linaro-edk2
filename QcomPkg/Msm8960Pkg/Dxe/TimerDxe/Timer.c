@@ -51,7 +51,37 @@ volatile UINTN  gVector;
 
 static void wait_for_timer_op(void)
 {
-	while (MmioRead32(SPSS_TIMER_STATUS) & SPSS_TIMER_STATUS_DGT_EN);
+	//while (MmioRead32(SPSS_TIMER_STATUS) & SPSS_TIMER_STATUS_DGT_EN);
+}
+
+VOID Set_GPT_Enable(int en)
+{
+	UINT32 DATA = MmioRead32(GPT_ENABLE);
+	UINT32 DATA_NEW;
+	if(en)
+	{
+		DATA_NEW = DATA | (1 << 0);
+	}
+	else
+	{
+		DATA_NEW = DATA & ~(1 << 0);
+	}
+	MmioWrite32 (GPT_ENABLE, DATA_NEW);
+}
+
+VOID Set_GPT_ClrOnMatch(int en)
+{
+	UINT32 DATA = MmioRead32(GPT_ENABLE);
+	UINT32 DATA_NEW;
+	if(en)
+	{
+		DATA_NEW = DATA | (1 << 1);
+	}
+	else
+	{
+		DATA_NEW = DATA & ~(1 << 1);
+	}
+	MmioWrite32 (GPT_ENABLE, DATA_NEW);
 }
 
 //void platform_uninit_timer(void)
@@ -189,39 +219,37 @@ TimerDriverSetTimerPeriod (
   EFI_STATUS  Status;
   UINT64      TimerCount;
 
+
+
+  UINT32 ticks_per_seconds = 32768;
+  
+  UINT64 AA = TimerPeriod * ticks_per_seconds;
+  UINT64 BB = AA / 10000000;
+  
+  
+  
+  if(BB == 0 && TimerPeriod!=0)
+  {
+    return EFI_INVALID_PARAMETER;
+  }
+  
+  Set_GPT_Enable(0);
+  Set_GPT_ClrOnMatch(1);
+  MmioWrite32(GPT_MATCH_VAL,(UINT32)BB);
+  MmioWrite32(GPT_CLEAR,1);
+  
+  if(BB!=0 && TimerPeriod!=0 )
+  {
+	Set_GPT_Enable(1);
+  }
+  
+  
   if (TimerPeriod == 0) 
   {
-    // Disable DGT
-    MmioWrite32 (DGT_ENABLE, 0);
-    wait_for_timer_op();
-
     Status = gInterrupt->DisableInterruptSource(gInterrupt, gVector);
   } 
   else 
   {
-    //ticks_per_sec = 6750000;	/* (27 MHz / 4) 
-    //1s            = 6750000 ticks
-    //1ms           = 6750 ticks
-    //1us           =    6.75 ticks
-    //1ns           =    0.00675 ticks
-    //100000ns      = 675
-    //4000 ns       = 27 ticks
-    //148.148ns     = 1 ticks
-    //PcdEmbeddedPerformanceCounterPeriodInNanoseconds = 148
-    
-    //            1 ticks     ? ticks
-    //            ©¤©¤©¤©¤©¤©¤©¤©¤ = ©¤©¤©¤©¤©¤©¤©¤©¤
-    //            148ns       x*100ns
-    // ? ticks = x*100ns * 1 ticks / 148ns
-    
-  
-    // Calculate required timer count
-    TimerCount = DivU64x32(TimerPeriod * 100, PcdGet32(PcdEmbeddedPerformanceCounterPeriodInNanoseconds));
-
-    MmioWrite32(DGT_MATCH_VAL,(UINT32)TimerCount );
-    MmioWrite32(DGT_CLEAR,0);
-    MmioWrite32(DGT_ENABLE,DGT_ENABLE_EN | DGT_ENABLE_CLR_ON_MATCH_EN );
-
     Status = gInterrupt->EnableInterruptSource(gInterrupt, gVector);
   }
 
@@ -330,6 +358,8 @@ EFI_TIMER_ARCH_PROTOCOL   gTimer = {
 };
 
 
+
+
 /**
   Initialize the state information for the Timer Architectural Protocol and
   the Timer Debug support protocol that allows the debugger to break into a
@@ -352,31 +382,28 @@ TimerInitialize (
 {
   EFI_HANDLE  Handle = NULL;
   EFI_STATUS  Status;
+  
+  //return EFI_INVALID_PARAMETER;
   //UINT32      TimerBaseAddress;
 
   // Find the interrupt controller protocol.  ASSERT if not found.
   Status = gBS->LocateProtocol (&gHardwareInterruptProtocolGuid, NULL, (VOID **)&gInterrupt);
   ASSERT_EFI_ERROR (Status);
 
-  
+  gVector = 18;// IntNum_GPT0     DCD 18  //INT_DEBUG_TIMER_EXP;
   // Initialize DGT timer
 
   // disable timer 
-  MmioWrite32(DGT_ENABLE, 0);
+  MmioWrite32(GPT_ENABLE, 0);
   
-
-  // DGT uses LPXO source which is 27MHz.
-  // Set clock divider to 4,ticks_per_sec = 6750000(27 MHz / 4).
-  MmioWrite32(DGT_CLK_CTL, 3);
+  Set_GPT_ClrOnMatch(0);
   
-  
-
   // Disable the timer
   Status = TimerDriverSetTimerPeriod (&gTimer, 0);
   ASSERT_EFI_ERROR (Status);
 
   // Install interrupt handler
-  gVector = INT_DEBUG_TIMER_EXP;
+  
   Status = gInterrupt->RegisterInterruptSource (gInterrupt, gVector, TimerInterruptHandler);
   ASSERT_EFI_ERROR (Status);
 
@@ -384,7 +411,8 @@ TimerInitialize (
   //MmioOr32 (CM_FCLKEN_PER, CM_FCLKEN_PER_EN_GPT3_ENABLE);
 
   // Set up default timer
-  Status = TimerDriverSetTimerPeriod (&gTimer, FixedPcdGet32(PcdTimerPeriod));
+  //Status = TimerDriverSetTimerPeriod (&gTimer, FixedPcdGet32(PcdTimerPeriod));
+  Status = TimerDriverSetTimerPeriod (&gTimer, 915);
   ASSERT_EFI_ERROR (Status);
 
   // Install the Timer Architectural Protocol onto a new handle

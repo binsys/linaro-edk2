@@ -322,8 +322,8 @@ extern unsigned int mmc_boot_mci_base;
 /* OCR Register */
 #define MMC_BOOT_OCR_17_19                (1 << 7)
 #define MMC_BOOT_OCR_27_36                (0x1FF << 15)
-#define MMC_BOOT_OCR_SEC_MODE             (2 << 29)
-#define MMC_BOOT_OCR_BUSY                 (1 << 31)
+#define MMC_BOOT_OCR_SEC_MODE             (2U << 29)
+#define MMC_BOOT_OCR_BUSY                 (1U << 31)
 
 /* Commands type */
 #define MMC_BOOT_CMD_BCAST                (1 << 0)
@@ -371,7 +371,7 @@ extern unsigned int mmc_boot_mci_base;
 #define MMC_BOOT_R1_ERASE_SEQ_ERR         (1 << 28)
 #define MMC_BOOT_R1_BLOCK_LEN_ERR         (1 << 29)
 #define MMC_BOOT_R1_ADDR_ERR              (1 << 30)
-#define MMC_BOOT_R1_OUT_OF_RANGE          (1 << 31)
+#define MMC_BOOT_R1_OUT_OF_RANGE          (1U << 31)
 
 /* Macros for Common Errors */
 #define MMC_BOOT_E_SUCCESS                0
@@ -577,7 +577,7 @@ struct mmc_host {
     ({                                                             \
      unsigned int indx = (start) / (size_of);                  \
      unsigned int offset = (start) % (size_of);                \
-     unsigned int mask = (((len)<(size_of))? 1<<(len):0) - 1; \
+     unsigned int mask = (((len)<(size_of))? 1U<<(len):0) - 1; \
      unsigned int unpck = array[indx] >> offset;               \
      unsigned int indx2 = ((start) + (len) - 1) / (size_of);       \
      if(indx2 > indx)                                          \
@@ -623,6 +623,7 @@ unsigned int mmc_write(unsigned long long data_addr,unsigned int data_len, unsig
 unsigned int mmc_read(unsigned long long data_addr, unsigned int *out,unsigned int data_len);
 unsigned mmc_get_psn(void);
 unsigned int mmc_erase_card(unsigned long long data_addr,unsigned long long data_len);
+UINT32 mmc_get_device_blocksize(VOID);
 
 void mmc_mclk_reg_wr_delay(VOID);
 void mmc_boot_mci_clk_enable(VOID);
