@@ -89,19 +89,27 @@ extern void target_mmc_caps(struct mmc_host *host);
 
 /* data access time unit in ns */
 static const unsigned int taac_unit[] =
-{ 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000 };
+{ 
+	1, 10, 100, 1000, 10000, 100000, 1000000, 10000000 
+};
 
 /* data access time value x 10 */
 static const unsigned int taac_value[] =
-{ 0, 10, 12, 13, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 80 };
+{ 
+	0, 10, 12, 13, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 80 
+};
 
 /* data transfer rate in kbit/s */
 static const unsigned int xfer_rate_unit[] =
-{ 100, 1000, 10000, 100000, 0, 0, 0, 0 };
+{ 
+	100, 1000, 10000, 100000, 0, 0, 0, 0 
+};
 
 /* data transfer rate value x 10*/
 static const unsigned int xfer_rate_value[] =
-{ 0, 10, 12, 13, 15, 20, 26, 30, 35, 40, 45, 52, 55, 60, 70, 80 };
+{ 
+	0, 10, 12, 13, 15, 20, 26, 30, 35, 40, 45, 52, 55, 60, 70, 80 
+};
 
 unsigned char mmc_slot = 0;
 unsigned int mmc_boot_mci_base = 0;
@@ -372,7 +380,7 @@ static unsigned int mmc_boot_decode_and_save_csd(struct mmc_card *card, unsigned
 	DEBUG((EFI_D_INFO, "write_blk_len: %d\n", mmc_csd.write_blk_len));
 	DEBUG((EFI_D_INFO, "read_blk_len: %d\n", mmc_csd.read_blk_len));
 	DEBUG((EFI_D_INFO, "r2w_factor: %d\n", mmc_csd.r2w_factor));
-	DEBUG((EFI_D_INFO, "sector_size: %d\n", mmc_csd.sector_size));
+	DEBUG((EFI_D_INFO, "sector_size: 0x%x\n", mmc_csd.sector_size));
 	DEBUG((EFI_D_INFO, "c_size_mult:%d\n", mmc_csd.c_size_mult));
 	DEBUG((EFI_D_INFO, "c_size: %d\n", mmc_csd.c_size));
 	DEBUG((EFI_D_INFO, "nsac_clk_cycle: %d\n", mmc_csd.nsac_clk_cycle));
@@ -383,7 +391,7 @@ static unsigned int mmc_boot_decode_and_save_csd(struct mmc_card *card, unsigned
 	DEBUG((EFI_D_INFO, "write_blk_misalign: %d\n", mmc_csd.write_blk_misalign));
 	DEBUG((EFI_D_INFO, "read_blk_partial: %d\n", mmc_csd.read_blk_partial));
 	DEBUG((EFI_D_INFO, "write_blk_partial: %d\n", mmc_csd.write_blk_partial));
-	DEBUG((EFI_D_INFO, "Card Capacity: %llu Bytes\n", card->capacity));
+	DEBUG((EFI_D_INFO, "Card Capacity: 0x%lx Bytes\n", card->capacity));
 
 	return MMC_BOOT_E_SUCCESS;
 }
@@ -524,7 +532,7 @@ static unsigned int mmc_boot_send_command(struct mmc_boot_command *cmd)
 	/* Wait for the MMC_BOOT_MCI_CMD write to go through. */
 	mmc_mclk_reg_wr_delay();
 
-	DEBUG((EFI_D_INFO, "Command sent: CMD%d MCI_CMD_REG:%x MCI_ARG:%x\n", cmd_index, mmc_cmd, cmd->argument));
+	//DEBUG((EFI_D_INFO, "Command sent: CMD%d MCI_CMD_REG:%x MCI_ARG:%x\n", cmd_index, mmc_cmd, cmd->argument));
 
 	/* 3. Wait for interrupt or poll on the following bits of MCI_STATUS
 	   register */
@@ -591,7 +599,7 @@ static unsigned int mmc_boot_send_command(struct mmc_boot_command *cmd)
 				mmc_return = MMC_BOOT_E_CMD_INDX_MISMATCH;
 			}
 
-			DEBUG((EFI_D_INFO, "Command response received: %X\n", cmd->resp[0]));
+			//DEBUG((EFI_D_INFO, "Command response received: %X\n", cmd->resp[0]));
 			break;
 		}
 

@@ -124,7 +124,7 @@ READ_LOCK_STATUS   = TRUE
   
   INF MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
   
-  INF FatBinPkg/EnhancedFatDxe/Fat.inf
+  INF FatPkg/EnhancedFatDxe/Fat.inf
 
 [FV.FVMAIN_COMPACT]
 FvAlignment        = 8

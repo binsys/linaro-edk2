@@ -62,33 +62,6 @@ MMCHS_DEVICE_PATH gMmcHsDevicePath =
 	}
 };
 
-CARD_INFO                  gCardInfo;
-
-
-EFI_STATUS
-SdReadWrite(
-	IN EFI_BLOCK_IO_PROTOCOL    *This,
-	IN  UINTN                   Lba,
-	OUT VOID                    *Buffer,
-	IN  UINTN                   BufferSize,
-	IN  OPERATION_TYPE          OperationType
-)
-{
-	EFI_STATUS Status = EFI_SUCCESS;
-
-	EFI_TPL    OldTpl;
-
-	OldTpl = gBS->RaiseTPL(TPL_NOTIFY);
-
-DoneRestoreTPL:
-
-	gBS->RestoreTPL(OldTpl);
-
-Done:
-
-	return Status;
-
-}
 
 
 /**
@@ -108,6 +81,7 @@ MMCHSReset(
 	IN BOOLEAN                        ExtendedVerification
 )
 {
+	
 	return EFI_SUCCESS;
 }
 
@@ -145,13 +119,22 @@ MMCHSReadBlocks(
 	OUT VOID                          *Buffer
 )
 {
-	EFI_STATUS Status;
+	EFI_STATUS Status = EFI_SUCCESS;
+	EFI_TPL    OldTpl;
+	INT32      ret;
 
-	//Perform Read operation.
-	Status = EFI_SUCCESS;
+	OldTpl = gBS->RaiseTPL(TPL_NOTIFY);
 
+	ret = mmc_read(gMMCHSMedia.BlockSize * Lba, (UINT32 *)Buffer,BufferSize);
+	
+	if(ret != MMC_BOOT_E_SUCCESS)
+	{
+		Status = EFI_DEVICE_ERROR;
+	}
+
+	gBS->RestoreTPL(OldTpl);
+	
 	return Status;
-
 }
 
 
@@ -185,8 +168,21 @@ MMCHSWriteBlocks(
 	IN VOID                           *Buffer
 )
 {
-	EFI_STATUS  Status;
-	Status = EFI_SUCCESS;
+	EFI_STATUS Status = EFI_SUCCESS;
+	EFI_TPL    OldTpl;
+	INT32      ret;
+
+	OldTpl = gBS->RaiseTPL(TPL_NOTIFY);
+
+	ret = mmc_write(gMMCHSMedia.BlockSize * Lba, BufferSize, (UINT32 *)Buffer);
+	
+	if(ret != MMC_BOOT_E_SUCCESS)
+	{
+		Status = EFI_DEVICE_ERROR;
+	}
+
+	gBS->RestoreTPL(OldTpl);
+	
 	return Status;
 
 }
@@ -228,6 +224,9 @@ static unsigned mmc_sdc_base[] =
 	MSM_SDC4_BASE 
 };
 
+extern struct mmc_host mmc_host;
+extern struct mmc_card mmc_card;
+
 EFI_STATUS
 EFIAPI
 MMCHSInitialize(
@@ -237,13 +236,13 @@ MMCHSInitialize(
 {
 	EFI_STATUS  Status;
 
-	ZeroMem(&gCardInfo, sizeof(CARD_INFO));
+	//ZeroMem(&gCardInfo, sizeof(CARD_INFO));
 
 	msm_clocks_init();
 
 	unsigned base_addr;
 	unsigned char slot;
-	UINT32 blocksize;
+	
 
 	/* Trying Slot 1 first */
 	slot = 1;
@@ -252,6 +251,7 @@ MMCHSInitialize(
 	{
 
 		DEBUG((EFI_D_ERROR, "MMCHSInitialize eMMC slot 1 init failed!\n"));
+		
 		/* Trying Slot 3 next */
 		slot = 3;
 		base_addr = mmc_sdc_base[slot - 1];
@@ -269,37 +269,41 @@ MMCHSInitialize(
 	{
 		DEBUG((EFI_D_ERROR, "MMCHSInitialize eMMC slot 1 init ok!\n"));
 	}
+	
+	gMMCHSMedia.LastBlock = (UINT64)((mmc_card.capacity / 512) - 1);
 
-	blocksize = mmc_get_device_blocksize();
-
-	DEBUG((EFI_D_INFO, "eMMC Block Size:%d\n", blocksize));
-
-	VOID * data;
-
-
-	Status = gBS->AllocatePool(EfiBootServicesData, (blocksize), &data);
-
-	if (EFI_ERROR(Status)) {
-		DEBUG((EFI_D_INFO, "test memory alloc failed!\n"));
-		return Status;
-	}
-
-	int ret = 0;
-	ret = mmc_read(blocksize, (UINT32 *)data, blocksize);
-
-	if (ret != 0)
 	{
-		DEBUG((EFI_D_INFO, "mmc_read failed! ret = %d\n", ret));
-		return EFI_DEVICE_ERROR;
+		UINT32 blocksize;
+		blocksize = mmc_get_device_blocksize();
+
+		DEBUG((EFI_D_INFO, "eMMC Block Size:%d\n", blocksize));
+
+		VOID * data;
+
+		Status = gBS->AllocatePool(EfiBootServicesData, (blocksize), &data);
+
+		if (EFI_ERROR(Status)) {
+			DEBUG((EFI_D_INFO, "test memory alloc failed!\n"));
+			return Status;
+		}
+
+		int ret = 0;
+		ret = mmc_read(blocksize, (UINT32 *)data, blocksize);
+		
+		if (ret != MMC_BOOT_E_SUCCESS)
+		{
+			DEBUG((EFI_D_INFO, "mmc_read failed! ret = %d\n", ret));
+			return EFI_DEVICE_ERROR;
+		}
+
+		UINT8 * STR = (UINT8 *)data;
+
+		DEBUG((EFI_D_INFO, "First 8 Bytes = %c%c%c%c%c%c%c%c\n", STR[0], STR[1], STR[2], STR[3], STR[4], STR[5], STR[6], STR[7]));
+
+
+
+		Status = gBS->FreePool(data);
 	}
-
-	UINT8 * STR = (UINT8 *)data;
-
-	DEBUG((EFI_D_INFO, "First 8 Bytes = %c%c%c%c%c%c%c%c\n", STR[0], STR[1], STR[2], STR[3], STR[4], STR[5], STR[6], STR[7]));
-
-
-
-	Status = gBS->FreePool(data);
 
 
 	//Publish BlockIO.

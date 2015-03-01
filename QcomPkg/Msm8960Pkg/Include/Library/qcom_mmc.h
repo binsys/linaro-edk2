@@ -577,7 +577,7 @@ struct mmc_host {
     ({                                                             \
      unsigned int indx = (start) / (size_of);                  \
      unsigned int offset = (start) % (size_of);                \
-     unsigned int mask = (((len)<(size_of))? 1U<<(len):0) - 1; \
+     unsigned int mask = (((len)<(size_of))? 1<<(len):0) - 1; \
      unsigned int unpck = array[indx] >> offset;               \
      unsigned int indx2 = ((start) + (len) - 1) / (size_of);       \
      if(indx2 > indx)                                          \
