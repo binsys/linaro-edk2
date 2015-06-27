@@ -183,7 +183,7 @@ OUT EFI_TIME_CAPABILITIES   *Capabilities
 	{
 		return EFI_INVALID_PARAMETER;
 	}
-
+	//DEBUG((EFI_D_INFO, "LibGetTime start\n"));
 
 	/* Get time and date */
 	ZeroMem(Time, sizeof(EFI_TIME));
@@ -198,7 +198,7 @@ OUT EFI_TIME_CAPABILITIES   *Capabilities
 	// Convert from internal 32-bit time to UEFI time
 	EpochToEfiTime(secs, Time);
 
-	DEBUG((EFI_D_INFO, "LibGetTime:RTC Year:%d Month:%d Day:%d Hour:%d Minute:%d Second:%d \n", Time->Year, Time->Month, Time->Day, Time->Hour, Time->Minute, Time->Second));
+	//DEBUG((EFI_D_INFO, "LibGetTime:RTC Year:%d Month:%d Day:%d Hour:%d Minute:%d Second:%d \n", Time->Year, Time->Month, Time->Day, Time->Hour, Time->Minute, Time->Second));
 
 	// Set capabilities
 
@@ -211,7 +211,7 @@ OUT EFI_TIME_CAPABILITIES   *Capabilities
 	}
 
 EXIT:
-	
+	//DEBUG((EFI_D_INFO, "LibGetTime end\n"));
 	return (Status == EFI_SUCCESS) ? Status : EFI_DEVICE_ERROR;
 }
 

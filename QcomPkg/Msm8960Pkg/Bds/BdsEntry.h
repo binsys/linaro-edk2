@@ -43,6 +43,9 @@
 #include <Protocol/UsbIo.h>
 #include <Protocol/LoadedImage.h>
 
+#include <Protocol/DevicePathFromText.h>
+#include <Protocol/DevicePathToText.h>
+
 
 EFI_STATUS
 LoadPeCoffSectionFromFv (

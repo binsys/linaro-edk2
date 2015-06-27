@@ -60,6 +60,7 @@
   gEfiSimpleFileSystemProtocolGuid
   gEfiUsbIoProtocolGuid
   gEfiFirmwareVolume2ProtocolGuid
+  gEfiDevicePathToTextProtocolGuid
 
 [Depex]
   TRUE

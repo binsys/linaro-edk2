@@ -176,11 +176,29 @@ BdsEntry (
                   );
   if (!EFI_ERROR(Status)) {
     for (Index = 0; Index < HandleCount; Index++) {
+    
+      DEBUG((EFI_D_ERROR, "Search fs%d...\n", Index));
       //Get the device path
       FileSystemDevicePath = DevicePathFromHandle(HandleBuffer[Index]);
       if (FileSystemDevicePath == NULL) {
         continue;
       }
+      
+      
+      DEBUG_CODE_BEGIN();
+        // We convert back to the text representation of the device Path to see if the initial text is correct
+        EFI_DEVICE_PATH_TO_TEXT_PROTOCOL* DevicePathToTextProtocol;
+        CHAR16* DevicePathTxt;
+
+        Status = gBS->LocateProtocol(&gEfiDevicePathToTextProtocolGuid, NULL, (VOID **)&DevicePathToTextProtocol);
+        ASSERT_EFI_ERROR(Status);
+        DevicePathTxt = DevicePathToTextProtocol->ConvertDevicePathToText (FileSystemDevicePath, TRUE, TRUE);
+
+        //ASSERT (StrCmp ((CHAR16*)PcdGetPtr(PcdDefaultBootDevicePath), DevicePathTxt) == 0);
+        DEBUG((EFI_D_INFO,"fs%d:Device Path = '%s'.\n", Index,DevicePathTxt));
+
+        FreePool (DevicePathTxt);
+      DEBUG_CODE_END();
 
       //Check if UsbIo is on any handles in the device path.
       Status = gBS->LocateDevicePath(&gEfiUsbIoProtocolGuid, &FileSystemDevicePath, &UsbDeviceHandle);
@@ -189,11 +207,27 @@ BdsEntry (
       }
 
       //Check if Usb stick has a magic EBL file.
-      LoadImageDevicePath = FileDevicePath(HandleBuffer[Index], L"Ebl.efi");
+      LoadImageDevicePath = FileDevicePath(HandleBuffer[Index], L"\\efi\\boot\\bootarm.efi");
+      
+      DEBUG_CODE_BEGIN();
+        // We convert back to the text representation of the device Path to see if the initial text is correct
+        EFI_DEVICE_PATH_TO_TEXT_PROTOCOL* DevicePathToTextProtocol;
+        CHAR16* DevicePathTxt;
+
+        Status = gBS->LocateProtocol(&gEfiDevicePathToTextProtocolGuid, NULL, (VOID **)&DevicePathToTextProtocol);
+        ASSERT_EFI_ERROR(Status);
+        DevicePathTxt = DevicePathToTextProtocol->ConvertDevicePathToText (LoadImageDevicePath, TRUE, TRUE);
+        DEBUG((EFI_D_INFO,"boot path = '%s'.\n",DevicePathTxt));
+
+        FreePool (DevicePathTxt);
+      DEBUG_CODE_END();
+      
       Status = gBS->LoadImage (TRUE, gImageHandle, LoadImageDevicePath, NULL, 0, &ImageHandle);
       if (EFI_ERROR(Status)) {
         continue;
       }
+      
+      DEBUG((EFI_D_ERROR, "found bootarm.efi. Status: %r\n", Status));
 
       //Boot to Shell on USB stick.
       Status = gBS->StartImage (ImageHandle, NULL, NULL);
@@ -220,6 +254,8 @@ BdsEntry (
   // Search all the FVs for an application with a UI Section of Ebl. A .FDF file can be used
   // to control the names of UI sections in an FV.
   //
+  
+  
   Status = FindApplicationMatchingUiSection (L"Ebl", &FvHandle, &NameGuid);
   if (!EFI_ERROR (Status)) {
 

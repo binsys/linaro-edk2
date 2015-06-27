@@ -113,6 +113,7 @@ LibResetSystem(
 )
 {
 	CALL_STUB   StartOfFv;
+	
 	DEBUG((EFI_D_ERROR, "LibResetSystem:ResetSystemLib need impl!!!\n"));
 	ASSERT(FALSE);
 	if (ResetData != NULL) 

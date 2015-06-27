@@ -15,27 +15,19 @@
 **/
 
 #include <Base.h>
+#include <Uefi.h>
 #include <Library/DebugLib.h>
 #include <Library/SerialPortLib.h>
 #include <Library/PcdLib.h>
 #include <Library/IoLib.h>
 
+#include <Library/qcom_lk.h>
+#include <Library/qcom_gsbi.h>
+#include <Library/qcom_uart_dm.h>
+
 extern int uart_putc(int port, char c);
 extern int uart_getc(int port, int wait);
 
-/*
-  Programmed hardware of Serial port.
-  @return    Always return EFI_UNSUPPORTED.
-**/
-RETURN_STATUS
-EFIAPI
-SerialPortInitialize (
-  VOID
-  )
-{
-	
-	return RETURN_SUCCESS;
-}
 
 /**
   Write data to serial device.
@@ -54,12 +46,13 @@ SerialPortWrite (
 	IN UINTN     NumberOfBytes
 )
 {
-	UINTN Count = 0;
-	for (Count = 0; Count < NumberOfBytes; Count++, Buffer++) 
-	{
-		uart_putc(0,*Buffer);
-	}
-	return NumberOfBytes;
+	//UINTN Count = 0;
+	//for (Count = 0; Count < NumberOfBytes; Count++, Buffer++) 
+	//{
+	//	uart_putc(0,*Buffer);
+	//}
+	UINT32 uart_base = FixedPcdGet32(PcdQcomDebugUartDmBaseAddress);
+	return msm_boot_uart_dm_write(uart_base,(INT8 *)Buffer,NumberOfBytes) == MSM_BOOT_UART_DM_E_SUCCESS?NumberOfBytes:0;
 }
 
 
@@ -114,6 +107,13 @@ SerialPortPoll (
 	//	return FALSE;
 	//}
 	
-	return FALSE;
+	UINT32 uart_base = FixedPcdGet32(PcdQcomDebugUartDmBaseAddress);
+	
+	if(!(readl(MSM_BOOT_UART_DM_SR(uart_base)) & MSM_BOOT_UART_DM_SR_RXRDY))
+	{
+		return EFI_NOT_READY;
+	}
+	
+	return EFI_SUCCESS;
 }
 

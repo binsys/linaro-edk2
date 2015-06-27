@@ -193,4 +193,6 @@ struct clk_list *clk_get_list(void);
 * @num: number of clocks in the list
 */
 void clk_init(struct clk_lookup *clist, unsigned num);
+
+extern void msm_clocks_init(void);
 #endif

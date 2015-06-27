@@ -46,6 +46,8 @@
 //#include <platform/msm_shared/timer.h>
 //#include "pm8921_hw.h"
 
+//ref https://github.com/viaembedded/vab820-kernel-bsp/blob/ec6f34e5b552fb0a52e6aae1a5afbbb1605cc6cc/drivers/rtc/rtc-pm8xxx.c
+//ref https://cells-source.cs.columbia.edu/plugins/gitiles/kernel/msm/+/04e554807c7e6dc553b7f6fdedd73407720f65de/include/linux/mfd/pm8xxx/pm8921.h
 /* RTC Register offsets from RTC CTRL REG */
 #define PM8XXX_ALARM_CTRL_OFFSET	0x01
 #define PM8XXX_RTC_WRITE_OFFSET		0x02
@@ -65,6 +67,7 @@
 
 #define LEAPS_THRU_END_OF(y) ((y)/4 - (y)/100 + (y)/400)
 
+static int pm8xxx_rtc_enable(void);
 static pm8921_dev_t *dev;
 
 static const unsigned char rtc_days_in_month[] = {
@@ -75,6 +78,35 @@ static const unsigned char rtc_days_in_month[] = {
 void pm8921_rtc_init(pm8921_dev_t *pmic)
 {
 	dev = pmic;
+	pm8921_rtc_alarm_disable();
+	pm8xxx_rtc_enable();
+}
+
+static int pm8xxx_rtc_enable(void)
+{
+	int rc;
+	UINT8 reg;
+	
+	DEBUG((EFI_D_WARN,"start pm8xxx_rtc_enable\n"));
+	rc = 0;
+	rc = dev->read(&reg, 1, PM8921_RTC_CTRL);
+	if (rc) 
+	{
+		DEBUG((EFI_D_WARN,"Failed to read RTC_CTRL reg = %d\n",rc));
+		return rc;
+	}
+
+	if (!(reg & PM8xxx_RTC_ENABLE)) 
+	{
+		reg |= PM8xxx_RTC_ENABLE;
+		rc = dev->write(&reg, 1, PM8921_RTC_CTRL);
+		if (rc) 
+		{
+			DEBUG((EFI_D_WARN,"Failed to write RTC_CTRL reg = %d\n",rc));
+			return rc;
+		}
+	}
+	return rc;
 }
 
 /*
@@ -226,7 +258,8 @@ int pm8921_rtc_alarm_disable(void)
 {
 	int rc;
 	UINT8 reg;
-
+	
+	DEBUG((EFI_D_WARN,"start pm8921_rtc_alarm_disable\n"));
 	rc = dev->read(&reg, 1, PM8921_RTC_CTRL);
 	if (rc) {
 		DEBUG((EFI_D_WARN,"Failed to read RTC_CTRL reg = %d\n",rc));
@@ -239,7 +272,7 @@ int pm8921_rtc_alarm_disable(void)
 		DEBUG((EFI_D_WARN,"Failed to write RTC_CTRL reg = %d\n",rc));
 		return rc;
 	}
-
+	
 	return rc;
 }
 

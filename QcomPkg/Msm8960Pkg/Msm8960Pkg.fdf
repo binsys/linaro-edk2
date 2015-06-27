@@ -91,10 +91,13 @@ READ_LOCK_STATUS   = TRUE
   INF QcomPkg/Msm8960Pkg/Dxe/TimerDxe/TimerDxe.inf
   INF QcomPkg/Dxe/PM8921Dxe/PM8921Dxe.inf
   INF QcomPkg/Msm8960Pkg/Dxe/DisplayDxe/DisplayDxe.inf
-  
+  #INF EmbeddedPkg/SerialDxe/SerialDxe.inf
+  #INF MdeModulePkg/Universal/DebugPortDxe/DebugPortDxe.inf
+  #INF EmbeddedPkg/SimpleTextInOutSerial/SimpleTextInOutSerial.inf
   #INF MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
   #INF MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
   INF MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf  
+  
   #INF MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf  
   
   INF MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf

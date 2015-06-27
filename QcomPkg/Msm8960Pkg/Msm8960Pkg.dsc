@@ -54,7 +54,7 @@
   
   
   
-  SerialPortLib                    |    QcomPkg/Library/MsmSerialPortLib/MsmSerialPortLib.inf
+  SerialPortLib                    |    QcomPkg/Library/MsmSerialPortLib/MsmSerialPortLibWithoutInit.inf
   MsmSharedLib                     |    QcomPkg/Library/MsmSharedLib/MsmSharedLib.inf
   MsmClockLib                      |    QcomPkg/Library/MsmClockLib/MsmClockLib.inf
   MsmSSBILib                       |    QcomPkg/Library/MsmSSBILib/MsmSSBILib.inf
@@ -198,6 +198,7 @@
   #  It could be set FALSE to save size.
   #gEfiMdeModulePkgTokenSpaceGuid.PcdConOutGopSupport|TRUE
   gEfiMdePkgTokenSpaceGuid.PcdUgaConsumeSupport|FALSE
+  gEfiMdeModulePkgTokenSpaceGuid.PcdConOutUgaSupport|FALSE
 
 [PcdsFixedAtBuild.common]
 
@@ -229,7 +230,7 @@
 #  DEBUG_LOADFILE  0x00020000  // UNDI Driver
 #  DEBUG_EVENT     0x00080000  // Event messages
 #  DEBUG_ERROR     0x80000000  // Error
-  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel             |0x800B55CF
+  gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel             |0x800B45CF
 
   gEfiMdePkgTokenSpaceGuid.PcdUartDefaultParity                |0x00
 
@@ -270,6 +271,9 @@
   gEmbeddedTokenSpaceGuid.PcdMemoryBase                             |0x80000000
   gEmbeddedTokenSpaceGuid.PcdMemorySize                             |0x40000000
   
+  gArmTokenSpaceGuid.PcdSystemMemoryBase                             |0x80000000
+  gArmTokenSpaceGuid.PcdSystemMemorySize                             |0x40000000
+  
   gArmTokenSpaceGuid.PcdCpuVectorBaseAddress                   |0x81500000
   gArmTokenSpaceGuid.PcdCpuResetAddress                        |0x81500000
   
@@ -285,7 +289,8 @@
   gEmbeddedTokenSpaceGuid.PcdFlashFvMainBase                   |0x80300000
   gEmbeddedTokenSpaceGuid.PcdFlashFvMainSize                   |0x00200000
 
-  #gArmPlatformTokenSpaceGuid.PcdFirmwareVendor                |"Qualcomm Msm8960 by BinSys"
+  gArmPlatformTokenSpaceGuid.PcdFirmwareVendor                |"Qualcomm Msm8960 by BinSys"
+  #gArmPlatformTokenSpaceGuid.PcdFirmwareVendor|"ARM Juno"
   
   gArmTokenSpaceGuid.PcdVFPEnabled                             |0x01
   
@@ -296,7 +301,32 @@
   
   #1 ticks about 148ns
   gEmbeddedTokenSpaceGuid.PcdEmbeddedPerformanceCounterPeriodInNanoseconds  |148
+  
+  #0-PCANSI, 1-VT100, 2-VT00+, 3-UTF8
+  gEfiMdePkgTokenSpaceGuid.PcdDefaultTerminalType|1
+  
+ #
+  # ARM OS Loader
+  #
+  gArmPlatformTokenSpaceGuid.PcdDefaultBootDescription|L"Boot Windows From eMMC"
+  gArmPlatformTokenSpaceGuid.PcdDefaultBootDevicePath|L"VenHw(B615F1F5-5088-43CD-809C-A16E52487D00)/HD(26,GPT,559FDB18-CC5F-41EC-8A3D-FD5DE9C7089B,0xA60000,0x32000)/\\efi\\boot\\bootarm.efi"
+  #gArmPlatformTokenSpaceGuid.PcdFdtDevicePath|L"VenHw(E7223039-5836-41E1-B542-D7EC736C5E59)/juno.dtb"
+  #gArmPlatformTokenSpaceGuid.PcdDefaultBootArgument|"DEBUG BOOTDEBUG DEBUGPORT=COM3 BAUDRATE=115200 REDIRECT=COM3 REDIRECTBAUDRATE=115200 DISABLE_INTEGRITY_CHECKS TESTSIGNING"
+  gArmPlatformTokenSpaceGuid.PcdDefaultBootArgument|""
+  #Define the binary type of the Default Boot Entry (0=EFI application, 1=Linux kernel with ATAG support, 2=Linux Kernel with FDT support)  
+  gArmPlatformTokenSpaceGuid.PcdDefaultBootType|0
+  
+  ## Timeout value for displaying progressing bar in before boot OS.
+  #  According to UEFI 2.0 spec, the default TimeOut should be 0xffff.
+  gArmPlatformTokenSpaceGuid.PcdPlatformBootTimeOut|0
 
+  # Use the serial console (ConIn & ConOut) and the Graphic driver (ConOut)
+  #gArmPlatformTokenSpaceGuid.PcdDefaultConOutPaths|L"VenHw(D3987D4B-971A-435F-8CAF-4967EB627241)/Uart(115200,8,N,1)/VenPcAnsi();VenHw(CE660500-824D-11E0-AC72-0002A5D5C51B)"
+  #gArmPlatformTokenSpaceGuid.PcdDefaultConInPaths|L"VenHw(D3987D4B-971A-435F-8CAF-4967EB627241)/Uart(115200,8,N,1)/VenPcAnsi()"
+  
+  gArmPlatformTokenSpaceGuid.PcdDefaultConOutPaths|L"VenHw(D3987D4B-971A-435F-8CAF-4967EB627241)/Uart(115200,8,N,1)/VenVt100();VenHw(CE660500-824D-11E0-AC72-0002A5D5C51B)"
+  gArmPlatformTokenSpaceGuid.PcdDefaultConInPaths|L"VenHw(D3987D4B-971A-435F-8CAF-4967EB627241)/Uart(115200,8,N,1)/VenVt100()"
+  #VenVt100()
 [PcdsPatchableInModule]
   # Console Resolution (Full HD)
   gEfiMdeModulePkgTokenSpaceGuid.PcdVideoHorizontalResolution|720
@@ -351,6 +381,7 @@
   
   #(DXE_DRIVER)
   QcomPkg/Msm8960Pkg/Bds/Bds.inf
+  ArmPlatformPkg/Bds/Bds.inf
   
   #(DXE_DRIVER)
   QcomPkg/Msm8960Pkg/Dxe/MMCHSDxe/MMCHS.inf
@@ -397,6 +428,22 @@
   #(UEFI_DRIVER)
   MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf 
   
+  #(UEFI_DRIVER)
+  EmbeddedPkg/SerialDxe/SerialDxe.inf{
+    <LibraryClasses>
+      SerialPortLib                    |    QcomPkg/Library/MsmSerialPortLib/MsmSerialPortLibWithInit.inf
+  }
+  
+  
+  
+  
+  #(UEFI_DRIVER)
+  MdeModulePkg/Universal/DebugPortDxe/DebugPortDxe.inf
+  
+  #(UEFI_DRIVER)
+  EmbeddedPkg/SimpleTextInOutSerial/SimpleTextInOutSerial.inf
+  
+
   
   #(UEFI_DRIVER)
   MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf

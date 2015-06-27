@@ -1,0 +1,45 @@
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = MsmSerialPortLib
+  FILE_GUID                      = 97546cbd-c0ff-4c48-ab0b-e4f58862acd3
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = SerialPortLib
+
+
+#
+#  VALID_ARCHITECTURES           = ARM IA32 X64 IPF EBC
+#
+
+[Sources.common]
+  MsmSerialPortLib.c
+  MsmSerialPortLibWithInit.c
+  qcom_uart_dm_init.c
+  qcom_uart_dm_write.c
+  qcom_uart_dm_read.c
+
+[LibraryClasses]
+  DebugLib
+  IoLib
+  TimerLib
+  ArmLib
+  MsmSharedLib
+  
+  MsmTargetLib
+  MsmTargetGpioLib
+  MsmTargetClockLib
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdePkg/MdePkg.dec
+  
+  QcomPkg/QcomPkg.dec
+
+[FixedPcd]
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugGsbiID
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugGsbiBaseAddress
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugUartDmBaseAddress
+  gQcomPkgTokenSpaceGuid.PcdQcomDebugRartDmClockRxTxBitRate
+
